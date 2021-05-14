@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutomatonAlgorithms", "AutomatonAlgorithms\AutomatonAlgorithms.csproj", "{144D8248-7F53-48FB-9B4A-63502F076A61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Experimentation", "Experimentation\Experimentation.csproj", "{90A6F151-F6D1-4BD4-B2C2-D35D24603C94}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{144D8248-7F53-48FB-9B4A-63502F076A61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{144D8248-7F53-48FB-9B4A-63502F076A61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{144D8248-7F53-48FB-9B4A-63502F076A61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{144D8248-7F53-48FB-9B4A-63502F076A61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90A6F151-F6D1-4BD4-B2C2-D35D24603C94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90A6F151-F6D1-4BD4-B2C2-D35D24603C94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90A6F151-F6D1-4BD4-B2C2-D35D24603C94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90A6F151-F6D1-4BD4-B2C2-D35D24603C94}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
