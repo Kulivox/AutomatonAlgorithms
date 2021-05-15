@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,8 +13,9 @@ namespace AutomatonAlgorithms
     {
         public static void Start(string inputPath, string configPath, int maxThreads)
         {
-            var loader = new AutomatonLoader();
+            
             var configuration = new BaseConfiguration(configPath);
+            var loader = new AutomatonLoader(configuration);
 
             var taskArray = new Task[maxThreads];
             var freeTaskArrayIndices = new HashSet<int>(Enumerable.Range(0, maxThreads));

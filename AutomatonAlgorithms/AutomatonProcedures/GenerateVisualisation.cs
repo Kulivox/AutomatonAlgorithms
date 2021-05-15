@@ -41,7 +41,6 @@ namespace AutomatonAlgorithms.AutomatonProcedures
             }
 
             sb.Append('}');
-            Console.WriteLine();
             return sb.ToString();
         }
 

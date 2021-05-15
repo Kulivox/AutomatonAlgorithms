@@ -17,6 +17,8 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
 
         public IConfiguration Configuration { get; }
 
+        public AutomatonType IntendedType { get; } = AutomatonType.Dfa;
+
         public Automaton Transform(Automaton input)
         {
             return MinimizeAutomaton(input);
@@ -25,16 +27,24 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
 
         public Automaton MinimizeAutomaton(Automaton inputAut)
         {
+            // first, we create initial classification of the states
+            // this classification contains two classes, first class containing non - accepting states and the second accepting states
             var previousClassification = CreateInitialClassification(inputAut);
+            
+            // then we try to classify it by applying classification rules of this algorithm 
+            // https://en.wikipedia.org/wiki/DFA_minimization
+            
             var newClassification = PerformRoundOfClassification(inputAut, previousClassification);
 
+            // we repeat this classification until the classification rounds don't change anything
             while (previousClassification.GetCountOfClasses() != newClassification.GetCountOfClasses())
             {
                 previousClassification = newClassification;
                 newClassification = PerformRoundOfClassification(inputAut, previousClassification);
             }
 
-
+            // than we create new automaton from the final classification
+            // each class is a new node in the minimized automaton
             return CreateNewAutomatonFromClassification(inputAut, newClassification);
         }
 
@@ -42,29 +52,36 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
         {
             var newStates = new HashSet<INode>();
             var classToState = new Dictionary<int, INode>();
-
+            // first, we create new nodes from the created classes
             foreach (var cls in newClassification.GetClasses())
             {
                 var newState = new BasicNode {Id = cls.ToString()};
                 newStates.Add(newState);
                 classToState.Add(cls, newState);
             }
-
+            // then we crate graph containing these nodes
             var newGraph = GraphGenerator.GenerateGraph(Configuration.GraphType, newStates);
 
             var currentClass = 0;
+            // then we go trough each class of the found classes, this time iterating over the sets of former states
             foreach (var statesOfClass in newClassification.ClassesToStatesIterator())
             {
+                // we retrieve the transition list (list of neighbours, ordered by letters) of the first item in the class
+                // we can be sure that the class will not be empty (if previous automaton is DFA), or it will throw an exception
+                // which will be caught as it is expected in non NFA automatons
                 var transition = newClassification.GetTransition(statesOfClass.First());
-
+                // we can now iterate over zipped ordered alphabet with transitions (because both alphabet and transitions
+                // are ordered on the alphabet
                 foreach (var labelAndClass in
                     inputAut.Alphabet.Zip(transition, (label, i) => new {Label = label, Class = i}))
-                    newGraph.CreateTransition(
+                    // we add new transitions for each letter - transition pair
+                    newGraph.AddTransition(
                         classToState[currentClass], classToState[labelAndClass.Class], labelAndClass.Label);
 
                 currentClass += 1;
             }
-
+            
+            // this magic retrieves class containing initial state and then returns its Node form
             var initialState = classToState[newClassification.GetClassOfState(
                 newClassification.ClassesToStatesIterator()
                     .First(sts => sts.Contains(inputAut.InitialState))

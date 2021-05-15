@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections;
-using AutomatonAlgorithms.CommandPipeline.ScriptSections.Init;
-using AutomatonAlgorithms.CommandPipeline.ScriptSections.Procedure;
-using AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation;
+using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions;
+using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptExceptions;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
 using AutomatonAlgorithms.Parsers;
@@ -14,38 +14,29 @@ namespace AutomatonAlgorithms.CommandPipeline
 {
     public class PipelineExecutor
     {
-        private const string PipelineFileRegex = @"(\w+){([^{}]+)}";
+        private const string PipelineFileRegex = @"\s*(\w+)\s*{([^{}]+)}";
 
-        private readonly List<Section> _sectionDictionary;
+        
+        private IConfiguration Configuration { get; }
+        private AutomatonLoader AutLoader { get; }
 
         public PipelineExecutor(IConfiguration configuration, AutomatonLoader autLoader)
         {
             Configuration = configuration;
             AutLoader = autLoader;
-
-            // maybe improve this by using automatic dependency injection
-            _sectionDictionary = new List<Section>
-            {
-                new InitSection(AutLoader, Configuration),
-                new TransformationsSection(Configuration),
-                new ProceduresSection(Configuration)
-            };
         }
 
-        private IConfiguration Configuration { get; }
-        private AutomatonLoader AutLoader { get; }
-
-
+        
         private List<(Section section, string sectString)> LoadFile(string filePath)
         {
             if (!File.Exists(filePath))
-                throw new FileLoadException("Specified input file does not exist");
+                throw new ScriptFormatException("Specified input file does not exist");
 
             var rx = new Regex(PipelineFileRegex, RegexOptions.Compiled);
 
             var matches = rx.Matches(File.ReadAllText(filePath));
             if (matches.Count == 0)
-                throw new FormatException("Input file doesn't have specified format");
+                throw new ScriptFormatException("Input file doesn't have specified format");
 
             var sectionList = new List<(Section section, string sectString)>();
             var sectionFactory = new SectionFactory(AutLoader, Configuration);
@@ -61,7 +52,31 @@ namespace AutomatonAlgorithms.CommandPipeline
             var automatonVariables = new Dictionary<string, Automaton>();
             var textVariables = new Dictionary<string, string>();
 
-            var sectionStrings = LoadFile(path);
+            List<(Section section, string sectString)> sectionsAndStrings;
+            try
+            {
+                sectionsAndStrings = LoadFile(path);
+            }
+            catch (Exception e ) when (e is ScriptException)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
+            
+            foreach (var (section, sectString) in sectionsAndStrings.OrderBy(it => it.section.Priority))
+            {
+                try
+                {
+                    section.ExecuteSection(sectString, automatonVariables, textVariables);
+                }
+                catch (Exception e) when(e is ScriptException)
+                {
+                    Console.WriteLine(e.Message);
+                    return;
+                }
+                
+
+            }
         }
     }
 }

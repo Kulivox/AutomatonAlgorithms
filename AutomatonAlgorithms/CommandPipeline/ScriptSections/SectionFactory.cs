@@ -1,5 +1,6 @@
 ﻿using System;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions;
+using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptExceptions;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Init;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Procedure;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation;

@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions;
+using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptExceptions;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
 using AutomatonAlgorithms.Parsers;
+using AutomatonAlgorithms.Parsers.Exceptions;
 
 namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Init
 {
     public class InitSection : Section
     {
-        private const string InitLineRegex = @"^([A|T])\s+(\w+)\s*=\s*(\S+)\s*$";
+        private const string InitLineRegex = @"^\s*([A|T])\s+(\w+)\s*=\s*(\S+)\s*$";
 
         private readonly AutomatonLoader _loader;
 
@@ -41,20 +44,25 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Init
                 if (!match.Success)
                     throw new PipelineInitException($"Syntax error detected at {line}");
 
-                //todo implement proper async
-                switch (match.Groups[1].ToString())
+                try
                 {
-                    case "A":
-                        var automatonTask = _loader.TryLoadAutomaton(match.Groups[3].ToString());
-                        automatonTask.Wait();
-                        autVarDict.Add(match.Groups[2].ToString(), automatonTask.Result);
-                        break;
-
-                    case "T":
-                        textVarDict.Add(match.Groups[2].ToString(), File.ReadAllText(match.Groups[3].ToString()));
-                        break;
-                    default:
-                        throw new PipelineInitException($"Unknown variable type for {line}");
+                    switch (match.Groups[1].ToString())
+                    {
+                        case "A":
+                        
+                            var automaton = _loader.TryLoadAutomaton(match.Groups[3].ToString(), match.Groups[2].ToString());
+                            autVarDict.Add(match.Groups[2].ToString(), automaton);
+                            break;
+                        case "T":
+                            textVarDict.Add(match.Groups[2].ToString(), File.ReadAllText(match.Groups[3].ToString()));
+                            break;
+                        default:
+                            throw new PipelineInitException($"Unknown variable type for {line}");
+                    }
+                }
+                catch (Exception e) when(e is AutomatonFileFormatException or FileNotFoundException)
+                {
+                    throw new PipelineInitException(e.Message);
                 }
             }
         }

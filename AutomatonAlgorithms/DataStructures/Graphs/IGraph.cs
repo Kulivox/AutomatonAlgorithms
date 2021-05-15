@@ -16,7 +16,7 @@ namespace AutomatonAlgorithms.DataStructures.Graphs
 
         public bool TryGetTransitionLabels(TNode left, TNode right, out HashSet<ILabel> label);
 
-        public void CreateTransition(TNode left, TNode right, TLabel label);
+        public void AddTransition(TNode left, TNode right, TLabel label);
 
         public void SetTransitionLabel(TNode left, TNode right, TLabel label);
 

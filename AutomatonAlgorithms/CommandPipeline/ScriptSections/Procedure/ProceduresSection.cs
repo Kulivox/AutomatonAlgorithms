@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using AutomatonAlgorithms.AutomatonProcedures;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions;
+using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptExceptions;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
 
@@ -22,11 +23,10 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Procedure
         public override void ExecuteSection(string sectionString, Dictionary<string, Automaton> automatonVariables,
             Dictionary<string, string> stringVariables)
         {
-            ExecuteProcedures(sectionString, automatonVariables, stringVariables);
+            ExecuteProcedures(sectionString, automatonVariables);
         }
 
-        private void ExecuteProcedures(string input, Dictionary<string, Automaton> autVarDict,
-            Dictionary<string, string> textVarDict)
+        private void ExecuteProcedures(string input, Dictionary<string, Automaton> autVarDict)
         {
             var inputLines = Regex.Split(input, "\r\n|\r|\n");
             var rx = new Regex(ProcedureRegex);
@@ -50,7 +50,16 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Procedure
             }
 
             var procDict = GetOperationDictionary<IAutomatonProcedure>(uniqueProcedureNames);
-            foreach (var (from, procedure) in procedures) procDict[procedure].Process(autVarDict[@from]);
+            foreach (var (from, procedureString) in procedures)
+            {
+                if (!procDict.TryGetValue(procedureString, out var procedure))
+                    throw new UnknownActionException($"ERROR: {procedureString} is not a name of known procedure");
+
+                if (!autVarDict.TryGetValue(from, out var automatonVariable))
+                    throw new VariableNotFoundException($"ERROR: {from} not found");
+                
+                procedure.Process(automatonVariable);
+            }
         }
     }
 }

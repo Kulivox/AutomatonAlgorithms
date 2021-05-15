@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions
+﻿namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptExceptions
 {
-    public class UnknownSectionException : Exception
+    public class UnknownSectionException : ScriptException
     {
         public UnknownSectionException()
         {

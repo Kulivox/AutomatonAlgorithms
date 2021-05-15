@@ -1,15 +1,8 @@
 ﻿init{
-A automaton1 = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\myAutomaton.txt
-A automaton2 = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\gilderkoAutomaton.txt
-
+    A automaton1 = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\large_automaton.txt
+    T textVar = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\aut-min2.txt
 }
 
-transformations{
-automaton1 -> BasicEpsilonRemover -> BasicAutomatonDeterminizator -> BasicAutomatonMinimizer => $minimizedAut1
-automaton2 -> BasicEpsilonRemover => $minAut2
-}
-
-procedures{
-    minimizedAut1 -> GenerateVisualisation
-    minAut2 -> AutomatonSaver
+procedures {
+    automaton1 -> GenerateVisualisation
 }

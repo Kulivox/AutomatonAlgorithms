@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Diagnostics;
 using System.IO;
 
 namespace AutomatonAlgorithms
@@ -60,7 +61,12 @@ namespace AutomatonAlgorithms
                     ScriptExecution.Start(input, config, threads);
                 }
             );
-
+            // var watch = new Stopwatch();
+            // watch.Start();
+            // var asd = command.Invoke(args);
+            // watch.Stop();
+            // Console.WriteLine(watch.Elapsed.ToString("mm\\:ss\\.ff"));
+            
             return command.Invoke(args);
         }
     }

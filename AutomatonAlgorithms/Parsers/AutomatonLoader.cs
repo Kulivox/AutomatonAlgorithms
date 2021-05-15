@@ -9,6 +9,7 @@ using AutomatonAlgorithms.DataStructures.Automatons;
 using AutomatonAlgorithms.DataStructures.Graphs;
 using AutomatonAlgorithms.DataStructures.Graphs.Nodes;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions.Labels;
+using AutomatonAlgorithms.Parsers.Exceptions;
 
 namespace AutomatonAlgorithms.Parsers
 {
@@ -22,41 +23,40 @@ namespace AutomatonAlgorithms.Parsers
 
         private const string RegexOfTransition = @"(\w+):(.*)>(.*)";
         private readonly IConfiguration _configuration;
-
-        public AutomatonLoader()
-        {
-            _configuration = new BaseConfiguration();
-        }
-
+        
         public AutomatonLoader(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
 
-        // todo improve data structures, not ideal for searching
         private IEnumerable<INode> GetStates(Group group)
         {
             return group.Value.Split("\n").Where(item => !string.IsNullOrEmpty(item))
-                .Select(it => new BasicNode {Id = it});
+                .Select(it => new BasicNode {Id = it}).ToHashSet();
         }
 
-        private INode GetInitialState(Group group, IEnumerable<INode> allStates)
+        private INode GetInitialState(Group group, HashSet<INode> allStates)
         {
             INode node = new BasicNode {Id = group.Value.Replace("\n", "")};
             if (!allStates.Contains(node))
-                throw new FormatException("Unknown initial state");
+                throw new AutomatonFileFormatException("Unknown initial state");
 
             return node;
         }
 
 
-        private List<ILabel> GetAlphabet(Group group)
+        private HashSet<ILabel> GetAlphabet(Group group)
         {
-            var result = new List<ILabel> {_configuration.EpsilonTransitionLabel};
-            result.AddRange(group.Value.Split("\n")
+            // epsilon transition labels are not added here, because not every automaton has them, but because
+            // the format specifies that they don't have to be in the alphabet explicitly, they are added later
+            var result = new HashSet<ILabel>();
+            foreach (var item in group.Value.Split("\n")
                 .Where(item => !string.IsNullOrEmpty(item))
-                .Select(item => new BasicLabel {Name = item}));
+                .Select(item => new BasicLabel {Name = item}))
+            {
+                result.Add(item);
+            }
             return result;
         }
 
@@ -69,7 +69,7 @@ namespace AutomatonAlgorithms.Parsers
             var acceptingStates = nodes as INode[] ?? nodes.ToArray();
 
             if (acceptingStates.Except(allStates).Any())
-                throw new FormatException("Unknown accepting state(s)");
+                throw new AutomatonFileFormatException("Unknown accepting state(s)");
 
             return acceptingStates;
         }
@@ -80,25 +80,35 @@ namespace AutomatonAlgorithms.Parsers
             return statesAsString.Split(",").Select(item => new BasicNode {Id = item});
         }
 
-        private bool ValidateTransition(INode from, INode to, ILabel label, IEnumerable<INode> nodes,
-            List<ILabel> alphabet)
+        private bool ValidateTransition(INode from, INode to, ILabel label, HashSet<INode> nodes,
+            HashSet<ILabel> alphabet)
         {
-            var nodeArray = nodes as INode[] ?? nodes.ToArray();
 
-            if (!nodeArray.Contains(from))
+            if (!nodes.Contains(from))
                 return false;
 
-            if (!nodeArray.Contains(to))
+            if (!nodes.Contains(to))
                 return false;
+            
+            
+            // if the alphabet contains the label, everything is ok
+            if (alphabet.Contains(label))
+                return true;
+            // if it doesn't, we firs check whether it isn't an epsilon transition, and if it is, we add it to the alphabet
+            // and return true
+            if (label.Equals(_configuration.EpsilonTransitionLabel))
+            {
+                alphabet.Add(_configuration.EpsilonTransitionLabel);
+                return true;
+            }
 
-            if (!alphabet.Contains(label))
-                return false;
+            // else we don't know this transition and return false
+            return false;
 
-            return true;
         }
 
 
-        private void ParseAndAddTransitions(Group match, IEnumerable<INode> states, List<ILabel> alphabet,
+        private void ParseAndAddTransitions(Group match, HashSet<INode> states, HashSet<ILabel> alphabet,
             IGraph<INode, ILabel> graph)
         {
             var re = new Regex(RegexOfTransition);
@@ -115,28 +125,32 @@ namespace AutomatonAlgorithms.Parsers
                 foreach (var destination in destinationStates)
                 {
                     if (!ValidateTransition(from, destination, label, states, alphabet))
-                        throw new FormatException($"Bad format of transition: {stringTransition}");
+                        throw new AutomatonFileFormatException($"Bad format of transition: {stringTransition}");
 
-                    graph.CreateTransition(from, destination, label);
+                    graph.AddTransition(from, destination, label);
                 }
             }
         }
 
-        public async Task<Automaton> TryLoadAutomaton(string path)
+        public Automaton TryLoadAutomaton(string path, string name)
         {
+            if (!File.Exists(path))
+                throw new AutomatonFileFormatException($"File doesn't exist: {path}");
+            
             if (new FileInfo(path).Length > _configuration.MaxFileSizeBytes)
-                throw new FileLoadException($"File size too large for file {path}");
+                throw new AutomatonFileFormatException($"File size too large: {path}");
+            
 
-            var text = await File.ReadAllTextAsync(path);
+            var text = File.ReadAllText(path);
             text = Regex.Replace(text, @"\r\n?|\n", "\n");
 
             var re = new Regex(RegexOfInput);
             var match = re.Match(text);
 
             if (!match.Success)
-                throw new FormatException($"File format wrong for file {path}");
+                throw new AutomatonFileFormatException($"Wrong file format of file: {path}");
 
-            var allStates = GetStates(match.Groups[1]);
+            var allStates = GetStates(match.Groups[1]).ToHashSet();
             var initialState = GetInitialState(match.Groups[3], allStates);
             var acceptingStates = GetAcceptingStates(match.Groups[4], allStates);
             var alphabet = GetAlphabet(match.Groups[6]);
@@ -144,8 +158,12 @@ namespace AutomatonAlgorithms.Parsers
             var graph = GraphGenerator.GenerateGraph(_configuration.GraphType, allStates);
             ParseAndAddTransitions(match.Groups[8], allStates, alphabet, graph);
 
-            return new Automaton(initialState, acceptingStates.ToHashSet(), graph, alphabet.ToHashSet(),
-                Path.GetFileNameWithoutExtension(path));
+            return new Automaton(initialState, acceptingStates.ToHashSet(), graph, alphabet.ToHashSet(), name);
+        }
+
+        public Automaton TryLoadAutomaton(string path)
+        {
+            return TryLoadAutomaton(path, Path.GetFileNameWithoutExtension(path));
         }
     }
 }

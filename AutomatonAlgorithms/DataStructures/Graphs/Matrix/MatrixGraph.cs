@@ -5,13 +5,14 @@ using AutomatonAlgorithms.DataStructures.Graphs.Matrix.MatrixTypes;
 using AutomatonAlgorithms.DataStructures.Graphs.Nodes;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions.Labels;
+using csdot;
 
 namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
 {
     public class MatrixGraph : IGraph<INode, ILabel>
 
     {
-        private readonly ITransitionMatrix<INode> _transitionTransitionMatrix;
+        private  ITransitionMatrix<INode> _transitionTransitionMatrix;
 
         public MatrixGraph()
         {
@@ -20,15 +21,19 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
 
         public MatrixGraph(IEnumerable<INode> nodes)
         {
-            _transitionTransitionMatrix = new BasicTransitionMatrix(nodes);
-            Nodes = new HashSet<INode>(nodes);
+            var nodeArray = nodes as INode[] ?? nodes.ToArray();
+            
+            _transitionTransitionMatrix = new BasicTransitionMatrix(nodeArray);
+            Nodes = new HashSet<INode>(nodeArray);
         }
 
         public HashSet<INode> Nodes { get; }
 
+        // very expensive, matrix graph should not be created by using this method
         public void AddNode(INode node)
         {
-            throw new NotImplementedException();
+            Nodes.Add(node);
+            _transitionTransitionMatrix = new BasicTransitionMatrix(Nodes);
         }
 
         public IEnumerable<INode> GetNeighbours(INode node)
@@ -61,7 +66,7 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
             }
         }
 
-        public void CreateTransition(INode left, INode right, ILabel label)
+        public void AddTransition(INode left, INode right, ILabel label)
         {
             var item = _transitionTransitionMatrix[left, right];
             if (item is null)
