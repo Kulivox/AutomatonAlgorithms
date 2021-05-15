@@ -1,4 +1,4 @@
-﻿using AutomatonAlgorithms.Automatons;
+﻿using AutomatonAlgorithms.DataStructures.Automatons;
 
 namespace AutomatonAlgorithms.AutomatonTransformations
 {

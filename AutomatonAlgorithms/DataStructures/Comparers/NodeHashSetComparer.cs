@@ -15,21 +15,18 @@ namespace AutomatonAlgorithms.DataStructures.Comparers
             return x.Count == y.Count && SetsAreEqual(x, y);
         }
 
-        private bool SetsAreEqual(HashSet<INode> x, HashSet<INode> y)
-        {
-            foreach (var item in x)
-            {
-                if (!y.Contains(item))
-                    return false;
-
-            }
-
-            return true;
-        }
-
         public int GetHashCode(HashSet<INode> obj)
         {
             return HashCode.Combine(obj.Comparer, obj.Count);
+        }
+
+        private bool SetsAreEqual(HashSet<INode> x, HashSet<INode> y)
+        {
+            foreach (var item in x)
+                if (!y.Contains(item))
+                    return false;
+
+            return true;
         }
     }
 }

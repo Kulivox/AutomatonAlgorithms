@@ -13,9 +13,9 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Transitions
         }
 
         public INode From { get; }
-        
+
         public INode To { get; }
-        
+
         public HashSet<ILabel> Labels { get; set; }
     }
 }

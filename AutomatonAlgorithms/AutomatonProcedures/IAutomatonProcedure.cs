@@ -1,5 +1,5 @@
-﻿using AutomatonAlgorithms.Automatons;
-using AutomatonAlgorithms.Configurations;
+﻿using AutomatonAlgorithms.Configurations;
+using AutomatonAlgorithms.DataStructures.Automatons;
 
 namespace AutomatonAlgorithms.AutomatonProcedures
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AutomatonAlgorithms.Automatons;
 using AutomatonAlgorithms.Configurations;
+using AutomatonAlgorithms.DataStructures.Automatons;
 using AutomatonAlgorithms.DataStructures.Graphs;
 using AutomatonAlgorithms.DataStructures.Graphs.Nodes;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions.Labels;
@@ -10,12 +10,12 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Canonization
 {
     public class BasicCanonizer : ICanonizer
     {
-        public IConfiguration Configuration { get; }
-
         public BasicCanonizer(IConfiguration configuration)
         {
             Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
 
         public Automaton Transform(Automaton input)
         {
@@ -39,18 +39,15 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Canonization
                 oldToNewStateAndTransition.Values.Select(val => val.node));
 
             foreach (var (node, neighbours) in oldToNewStateAndTransition.Values)
-            {
-                foreach (var (neighbour, label) in neighbours.Zip(inputAutomaton.Alphabet))
-                {
-                    newGraph.CreateTransition(node, neighbour, label);
-                }
-            }
+            foreach (var (neighbour, label) in neighbours.Zip(inputAutomaton.Alphabet))
+                newGraph.CreateTransition(node, neighbour, label);
 
             var newInitialState = oldToNewStateAndTransition[inputAutomaton.InitialState].node;
             var newAcceptingStates =
                 inputAutomaton.AcceptingStates.Select(state => oldToNewStateAndTransition[state].node).ToHashSet();
 
-            var newAutomaton = new Automaton(newInitialState, newAcceptingStates, newGraph, inputAutomaton.Alphabet, inputAutomaton.Name);
+            var newAutomaton = new Automaton(newInitialState, newAcceptingStates, newGraph, inputAutomaton.Alphabet,
+                inputAutomaton.Name);
             return newAutomaton;
         }
 

@@ -4,8 +4,8 @@ namespace Experimentation.Models.Graphs.Matrix.MatrixTypes
 {
     public class MatrixIndexException : Exception
     {
-        public MatrixIndexException(string message): base(message) {}
-        
-        
+        public MatrixIndexException(string message) : base(message)
+        {
+        }
     }
 }

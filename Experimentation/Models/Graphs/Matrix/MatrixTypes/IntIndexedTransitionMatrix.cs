@@ -11,21 +11,14 @@ namespace Experimentation.Models.Graphs.Matrix.MatrixTypes
             _matrix = new Transition<TValue>[size, size];
 
             for (var i = 0; i < size; i++)
-            {
-                for (var j = 0; j < size; j++)
-                {
-                    _matrix[i, j] = new Transition<TValue>();
-                }
-            }
-            
-            
+            for (var j = 0; j < size; j++)
+                _matrix[i, j] = new Transition<TValue>();
         }
-        
+
         public Transition<TValue> this[int x, int y]
         {
             get => _matrix[x, y];
             set => _matrix[x, y] = value;
         }
-        
     }
 }

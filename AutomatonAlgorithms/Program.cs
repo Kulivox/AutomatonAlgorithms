@@ -1,33 +1,67 @@
 ﻿using System;
+using System.CommandLine;
+using System.CommandLine.Invocation;
 using System.IO;
-using AutomatonAlgorithms.AutomatonProcedures;
-using AutomatonAlgorithms.AutomatonProcedures.SaveAutomaton;
-using AutomatonAlgorithms.AutomatonTransformations;
-using AutomatonAlgorithms.AutomatonTransformations.Canonization;
-using AutomatonAlgorithms.AutomatonTransformations.Determinization;
-using AutomatonAlgorithms.AutomatonTransformations.EpsilonTransitionRemoval;
-using AutomatonAlgorithms.AutomatonTransformations.Minimization;
-using AutomatonAlgorithms.CommandPipeline;
-using AutomatonAlgorithms.Configurations;
-using AutomatonAlgorithms.Parsers;
 
 namespace AutomatonAlgorithms
 {
     internal static class Program
     {
-        static void Main(string[] args)
+        private static RootCommand PrepareCommandLineParsing()
         {
-            
-            var loader = new AutomatonLoader();
+            var rootCommand = new RootCommand(
+                "Executes .pln scripts (does automaton operations specified in these files)")
+            {
+                new Option<string>(
+                    new[] {"-i", "--input"},
+                    () => ".",
+                    "Path to .pln scripts, default is current directory"
+                ),
+                new Option<string>(
+                    new[] {"-c", "--config"},
+                    () => "./config.cfg",
+                    "Path to configuration file for .pln script executors, default is ./config.cfg"
+                ),
+                new Option<int>(
+                    new[] {"-t", "--threads"},
+                    () => 5,
+                    "Max number of threads that should be spawned at the same time if parallelization is possible"
+                    + " Default is 5, minimum is 1 and max is 30"
+                )
+            };
+            return rootCommand;
+        }
 
-            var config =
-                new BaseConfiguration(
-                    @"C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\config.cfg");
+        private static int Main(string[] args)
+        {
+            var command = PrepareCommandLineParsing();
+
+            command.Handler = CommandHandler.Create<string, string, int>((input, config, threads) =>
+                {
+                    if (!File.Exists(config))
+                    {
+                        Console.WriteLine("Path to config doesn't lead to existing file");
+                        return;
+                    }
+
+                    if (!Directory.Exists(input))
+                    {
+                        Console.WriteLine("Path to input scripts doesn't lead to valid directory");
+                        return;
+                    }
+
+                    if (threads is < 1 or > 30)
+                    {
+                        Console.WriteLine("Incorrect number of threads");
+                        return;
+                    }
 
 
-            var pipeline = new PipelineExecutor(config, loader);
-            pipeline.LoadAndExecute(@"C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\pipeline.pln");
+                    ScriptExecution.Start(input, config, threads);
+                }
+            );
 
+            return command.Invoke(args);
         }
     }
 }

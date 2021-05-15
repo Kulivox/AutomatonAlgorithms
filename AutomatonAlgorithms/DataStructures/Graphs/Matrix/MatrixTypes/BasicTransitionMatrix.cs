@@ -4,15 +4,15 @@ using AutomatonAlgorithms.DataStructures.Graphs.Transitions;
 
 namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix.MatrixTypes
 {
-    public class BasicTransitionMatrix: ITransitionMatrix<INode>
+    public class BasicTransitionMatrix : ITransitionMatrix<INode>
     {
-        private readonly ITransition[,] _matrix;
         private readonly Dictionary<string, int> _genericIndexToIntIndex;
+        private readonly ITransition[,] _matrix;
 
         public BasicTransitionMatrix(IEnumerable<INode> indexes)
         {
             _genericIndexToIntIndex = new Dictionary<string, int>();
-            
+
             var i = 0;
             foreach (var item in indexes)
             {
@@ -23,7 +23,6 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix.MatrixTypes
             }
 
             _matrix = new ITransition[i, i];
-            
         }
 
         public ITransition this[INode x, INode y]

@@ -6,15 +6,8 @@ namespace Experimentation.Models.Automatons
 {
     public class Automaton<TState, TLetterType> where TState : IEquatable<TState>
     {
-        public TState InitialState { get; }
-        
-        public List<TState> AcceptingStates { get; }
-        
-        public IGraph<TState, TLetterType> StatesAndTransitions { get; }
-        
-        public List<TLetterType> Alphabet { get; }
-
-        public Automaton(TState initialState, List<TState> acceptingStates, IGraph<TState, TLetterType> statesAndTransitions,
+        public Automaton(TState initialState, List<TState> acceptingStates,
+            IGraph<TState, TLetterType> statesAndTransitions,
             List<TLetterType> alphabet)
         {
             InitialState = initialState;
@@ -22,5 +15,13 @@ namespace Experimentation.Models.Automatons
             StatesAndTransitions = statesAndTransitions;
             Alphabet = alphabet;
         }
+
+        public TState InitialState { get; }
+
+        public List<TState> AcceptingStates { get; }
+
+        public IGraph<TState, TLetterType> StatesAndTransitions { get; }
+
+        public List<TLetterType> Alphabet { get; }
     }
 }

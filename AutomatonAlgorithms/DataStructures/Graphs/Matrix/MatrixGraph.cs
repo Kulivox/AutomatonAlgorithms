@@ -9,22 +9,22 @@ using AutomatonAlgorithms.DataStructures.Graphs.Transitions.Labels;
 namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
 {
     public class MatrixGraph : IGraph<INode, ILabel>
-        
+
     {
         private readonly ITransitionMatrix<INode> _transitionTransitionMatrix;
 
-        public HashSet<INode> Nodes { get;}
-        
         public MatrixGraph()
         {
             Nodes = new HashSet<INode>();
         }
+
         public MatrixGraph(IEnumerable<INode> nodes)
         {
-            
             _transitionTransitionMatrix = new BasicTransitionMatrix(nodes);
             Nodes = new HashSet<INode>(nodes);
         }
+
+        public HashSet<INode> Nodes { get; }
 
         public void AddNode(INode node)
         {
@@ -38,10 +38,9 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
 
         public HashSet<ILabel> GetTransitionLabels(INode left, INode right)
         {
-           return _transitionTransitionMatrix[left, right].Labels;
+            return _transitionTransitionMatrix[left, right].Labels;
         }
 
-      
 
         public bool TryGetTransitionLabels(INode left, INode right, out HashSet<ILabel> label)
         {
@@ -60,7 +59,6 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
                 label = default;
                 return false;
             }
-            
         }
 
         public void CreateTransition(INode left, INode right, ILabel label)
@@ -68,14 +66,14 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
             var item = _transitionTransitionMatrix[left, right];
             if (item is null)
             {
-                _transitionTransitionMatrix[left, right] = new BasicTransition(left, right) {Labels = new HashSet<ILabel>(){label}};
+                _transitionTransitionMatrix[left, right] = new BasicTransition(left, right)
+                    {Labels = new HashSet<ILabel> {label}};
                 return;
             }
-            
-            item.Labels.Add(label);
 
+            item.Labels.Add(label);
         }
-        
+
 
         public void SetTransitionLabel(INode left, INode right, ILabel label)
         {
@@ -85,7 +83,6 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
         public void RemoveTransition(INode left, INode right)
         {
             _transitionTransitionMatrix[left, right] = null;
-
         }
     }
 }

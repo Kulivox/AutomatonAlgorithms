@@ -6,7 +6,7 @@ using AutomatonAlgorithms.DataStructures.Graphs.Transitions.Labels;
 
 namespace AutomatonAlgorithms.DataStructures.Graphs
 {
-    public static class GraphGenerator 
+    public static class GraphGenerator
     {
         public static IGraph<INode, ILabel> GenerateGraph(GraphTypes type)
         {
@@ -17,7 +17,7 @@ namespace AutomatonAlgorithms.DataStructures.Graphs
                 _ => throw new ArgumentException("Unknown graph type")
             };
         }
-        
+
         public static IGraph<INode, ILabel> GenerateGraph(GraphTypes type, IEnumerable<INode> nodes)
         {
             return type switch

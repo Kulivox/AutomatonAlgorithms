@@ -11,15 +11,14 @@ namespace Experimentation.Models.Graphs.Matrix
     {
         private readonly ITransitionMatrix<TNode, TLabel> _transitionTransitionMatrix;
 
-        public List<TNode> Nodes { get;}
-        
         public MatrixGraph(ICollection<TNode> nodes)
         {
-            
             _transitionTransitionMatrix = new GenericTransitionMatrix<TNode, TLabel>(nodes);
             Nodes = new List<TNode>(nodes);
         }
-        
+
+        public List<TNode> Nodes { get; }
+
         public IEnumerable<TNode> GetNeighbours(TNode node)
         {
             return Nodes.Where(n => _transitionTransitionMatrix[node, n].Exists);
@@ -47,8 +46,6 @@ namespace Experimentation.Models.Graphs.Matrix
                 label = default;
                 return false;
             }
-
-            
         }
 
         public void CreateTransition(TNode left, TNode right, TLabel label)

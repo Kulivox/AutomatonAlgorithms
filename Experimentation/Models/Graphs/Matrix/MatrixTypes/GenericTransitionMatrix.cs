@@ -5,13 +5,13 @@ namespace Experimentation.Models.Graphs.Matrix.MatrixTypes
 {
     public class GenericTransitionMatrix<TIndexType, TValue> : ITransitionMatrix<TIndexType, TValue>
     {
-        private readonly Transition<TValue>[,] _matrix;
         private readonly Dictionary<TIndexType, int> _genericIndexToIntIndex;
+        private readonly Transition<TValue>[,] _matrix;
 
         public GenericTransitionMatrix(IEnumerable<TIndexType> indexes)
         {
             _genericIndexToIntIndex = new Dictionary<TIndexType, int>();
-            
+
             var i = 0;
             foreach (var item in indexes)
             {
@@ -22,15 +22,11 @@ namespace Experimentation.Models.Graphs.Matrix.MatrixTypes
             }
 
             _matrix = new Transition<TValue>[i, i];
-            
+
 
             for (var x = 0; x < i; x++)
-            {
-                for (var y = 0; y < i; y++)
-                {
-                    _matrix[x, y] = new Transition<TValue>();
-                }
-            }
+            for (var y = 0; y < i; y++)
+                _matrix[x, y] = new Transition<TValue>();
         }
 
         public Transition<TValue> this[TIndexType x, TIndexType y]

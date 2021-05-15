@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using AutomatonAlgorithms.Automatons;
 using AutomatonAlgorithms.Configurations;
+using AutomatonAlgorithms.DataStructures.Automatons;
 using AutomatonAlgorithms.DataStructures.Comparers;
 using AutomatonAlgorithms.DataStructures.Graphs;
 using AutomatonAlgorithms.DataStructures.Graphs.Nodes;
@@ -10,19 +10,19 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
 {
     public class BasicAutomatonMinimizer : IAutomatonMinimizer
     {
-        public IConfiguration Configuration { get; }
-        
         public BasicAutomatonMinimizer(IConfiguration configuration)
         {
             Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
 
         public Automaton Transform(Automaton input)
         {
             return MinimizeAutomaton(input);
         }
 
-        
+
         public Automaton MinimizeAutomaton(Automaton inputAut)
         {
             var previousClassification = CreateInitialClassification(inputAut);
@@ -34,7 +34,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
                 newClassification = PerformRoundOfClassification(inputAut, previousClassification);
             }
 
-            
+
             return CreateNewAutomatonFromClassification(inputAut, newClassification);
         }
 
@@ -59,10 +59,8 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
 
                 foreach (var labelAndClass in
                     inputAut.Alphabet.Zip(transition, (label, i) => new {Label = label, Class = i}))
-                {
                     newGraph.CreateTransition(
                         classToState[currentClass], classToState[labelAndClass.Class], labelAndClass.Label);
-                }
 
                 currentClass += 1;
             }
@@ -82,7 +80,8 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
             return newAutomaton;
         }
 
-        private static NodeClassification PerformRoundOfClassification(Automaton inputAut, NodeClassification oldClassification)
+        private static NodeClassification PerformRoundOfClassification(Automaton inputAut,
+            NodeClassification oldClassification)
         {
             var currentClassId = -1;
             var newClassification = new NodeClassification(inputAut.StatesAndTransitions.Nodes.Count);
@@ -107,7 +106,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
                         currentClassId += 1;
                         newlyFoundClasses.Add(neighClasses, currentClassId);
                     }
-                    
+
                     newClassification.AddStateAndItsClass(newlyFoundClasses[neighClasses], node);
 
                     newClassification.AddTransition(node, neighClasses);
@@ -124,15 +123,9 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
             var nonAcceptingStates =
                 inputAut.StatesAndTransitions.Nodes.Except(inputAut.AcceptingStates);
 
-            foreach (var item in nonAcceptingStates)
-            {
-                initialClassification.AddStateAndItsClass(0, item);
-            }
+            foreach (var item in nonAcceptingStates) initialClassification.AddStateAndItsClass(0, item);
 
-            foreach (var item in inputAut.AcceptingStates)
-            {
-                initialClassification.AddStateAndItsClass(1, item);
-            }
+            foreach (var item in inputAut.AcceptingStates) initialClassification.AddStateAndItsClass(1, item);
 
             return initialClassification;
         }

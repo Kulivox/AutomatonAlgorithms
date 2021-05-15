@@ -4,11 +4,6 @@
     {
         public string Id { get; set; }
 
-        protected bool Equals(BasicNode other)
-        {
-            return Id == other.Id;
-        }
-
         public bool Equals(INode other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -17,17 +12,22 @@
             return other.Id == Id;
         }
 
+        protected bool Equals(BasicNode other)
+        {
+            return Id == other.Id;
+        }
+
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             return Equals((BasicNode) obj);
         }
 
         public override int GetHashCode()
         {
-            return (Id != null ? Id.GetHashCode() : 0);
+            return Id != null ? Id.GetHashCode() : 0;
         }
     }
 }

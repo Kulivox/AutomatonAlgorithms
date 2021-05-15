@@ -19,9 +19,15 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
             _statesToClasses = new Dictionary<INode, int>();
         }
 
-        public int GetClassOfState(INode state) => _statesToClasses[state];
+        public int GetClassOfState(INode state)
+        {
+            return _statesToClasses[state];
+        }
 
-        public HashSet<INode> GetStatesOfClass(int classId) => _classesToStates[classId];
+        public HashSet<INode> GetStatesOfClass(int classId)
+        {
+            return _classesToStates[classId];
+        }
 
         public void AddStateAndItsClass(int classId, INode state)
         {
@@ -35,12 +41,12 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
         {
             _transitions.Add(state, neighbourClasses);
         }
-        
+
         public List<int> GetTransition(INode state)
         {
             return _transitions[state];
         }
-        
+
         public int GetCountOfClasses()
         {
             return _classesToStates.TakeWhile(cls => cls != null).Count();
