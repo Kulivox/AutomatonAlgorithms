@@ -47,11 +47,18 @@ namespace AutomatonAlgorithms.AutomatonProcedures
         private void GenerateImage(Automaton automaton)
         {
             var graphViz = new GraphViz();
+            try
+            {
+                var path = Configuration.OutputFolderPath + Path.DirectorySeparatorChar + automaton.Name + "Image.png";
+                var dotString = CreateStringForRendering(automaton);
 
-            var path = Configuration.OutputFolderPath + Path.DirectorySeparatorChar + automaton.Name + "Image.png";
-            var dotString = CreateStringForRendering(automaton);
-
-            graphViz.LayoutAndRenderDotGraph(dotString, path, "png");
+                graphViz.LayoutAndRenderDotGraph(dotString, path, "png");
+            }
+            catch (Exception e)
+            {
+                throw new ProcedureException("Error while, generating image, please, check output folder", e);
+            }
+           
         }
     }
 }

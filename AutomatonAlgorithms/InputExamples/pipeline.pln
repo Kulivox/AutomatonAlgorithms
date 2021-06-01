@@ -1,8 +1,8 @@
 ﻿init{
-    A automaton1 = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\large_automaton.txt
-    T textVar = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\aut-min2.txt
+    A automaton1 = C:\Users\pc_yoga\RiderProjects\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\aut-min.txt
+    T textVar = C:\Users\pc_yoga\RiderProjects\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\large_automaton.txt
 }
 
 procedures {
-    automaton1 -> GenerateVisualisation
+    automaton1 -> AutomatonSaver
 }
