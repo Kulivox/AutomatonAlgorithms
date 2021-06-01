@@ -1,8 +1,11 @@
 ﻿init{
-    A automaton1 = C:\Users\pc_yoga\RiderProjects\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\aut-min.txt
-    T textVar = C:\Users\pc_yoga\RiderProjects\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\large_automaton.txt
+    A automaton1 = C:\Users\pc_yoga\RiderProjects\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\large_automaton.txt
+}
+
+transformations {
+    automaton1 -> BasicEpsilonRemover -> BasicAutomatonDeterminizator -> BasicAutomatonMinimizer => result
 }
 
 procedures {
-    automaton1 -> AutomatonSaver
+    result -> AutomatonSaver
 }
