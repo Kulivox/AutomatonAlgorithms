@@ -36,8 +36,8 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Determinization
             var newStates = new HashSet<HashSet<INode>>(new NodeHashSetComparer()) {sink};
             var statesAndTransitions = new Dictionary<HashSet<INode>, Dictionary<ILabel, HashSet<INode>>>();
 
-            // sink is prepared, which means that new transitions under every
-            // letter leading from an to the sink are prepared
+            // sink is prepared, which means that new reflexive transitions under every
+            // letter leading from and to the sink are prepared
             PrepareSink(inputAutomaton, statesAndTransitions, sink);
 
             // main determinization algorithm is in this method
@@ -104,6 +104,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Determinization
             // it is initialised by state set containing single element, which is the initial state of the NFA
             var unexploredStates = new Stack<HashSet<INode>>();
             unexploredStates.Push(new HashSet<INode> {inputAutomaton.InitialState});
+            var sinkUsed = false;
 
             while (unexploredStates.Count > 0)
             {
@@ -121,12 +122,24 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Determinization
                 {   
                     // if there are no transitions under the label (key), new transition to sink is created
                     if (value.Count == 0)
+                    {
                         statesAndTransitions[currentState][key].Add(sink.First());
+                        sinkUsed = true;
+                    }
+                        
                     
                     // if new set of states is created, we push it to the stack so it can be explored further
                     if (!newStates.Contains(value)) unexploredStates.Push(value);
                 }
             }
+
+            // if there weren't any undefined transitions that would lead to sink, sink node is removed from the transitions, because it is not needed in the result
+            if (!sinkUsed)
+            {
+                statesAndTransitions.Remove(sink);
+                newStates.Remove(sink);
+            }
+            
         }
 
         

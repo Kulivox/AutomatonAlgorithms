@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using AutomatonAlgorithms.AutomatonTransformations;
-using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.FailedOperations;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptExceptions;
 using AutomatonAlgorithms.Configurations;
@@ -63,7 +62,9 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
 
             foreach (var (from, transformations, to) in transformationLines)
             {
-                var fromAut = autVarDict[from];
+                if (!autVarDict.TryGetValue(from, out var fromAut))
+                    throw new VariableNotFoundException($"{from} not found in transformation section");
+                    
                 var tempAut = fromAut;
 
                 foreach (var transformationString in transformations)
@@ -92,12 +93,27 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
                     }
                     
                 }
-                
+
                 // $ is used to create new variables, if it is used on the right side of the expression
                 if (to[0] == '$')
-                    autVarDict.Add(to[1..], tempAut);
+                {
+                    if (!autVarDict.TryAdd(to[1..], tempAut))
+                        throw new VariableAlreadyDeclaredException(
+                            $"{to[1..]} is already declared in the script scope");
+
+                    tempAut.Name = to[1..];
+                }
                 else
+                {
+                    if (!autVarDict.ContainsKey(to))
+                        throw new VariableNotFoundException($"Automaton variable '{to}' doesn't exist");
+                    
                     autVarDict[to] = tempAut;
+                    tempAut.Name = to;
+                }
+                
+                
+                    
             }
         }
     }

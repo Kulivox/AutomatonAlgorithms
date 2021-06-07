@@ -12,6 +12,8 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Canonization
     {
         public AutomatonType IntendedType { get; } = AutomatonType.Dfa;
 
+        private const int SequenceStart = 1;
+
         public BasicCanonizer(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -66,18 +68,18 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Canonization
             // we also have to store the initial node inside, to make it possible to add renamed transitions during first iteration
             var oldToNewStateAndTransition = new Dictionary<INode, (INode node, List<INode> letterOrderedTransitions)>
             {
-                {inputAutomaton.InitialState, (new BasicNode {Id = "0"}, new List<INode>())}
+                {inputAutomaton.InitialState, (new BasicNode {Id = $"{SequenceStart}"}, new List<INode>())}
             };
 
             // data structures for DFS are created
-            var statesToExplore = new Stack<INode>();
-            statesToExplore.Push(inputAutomaton.InitialState);
+            var statesToExplore = new Queue<INode>();
+            statesToExplore.Enqueue(inputAutomaton.InitialState);
 
-            var newNodeCounter = 1;
+            var newNodeCounter = SequenceStart + 1;
 
             while (statesToExplore.Count > 0)
             {
-                var currentState = statesToExplore.Pop();
+                var currentState = statesToExplore.Dequeue();
 
                 foreach (var letter in inputAutomaton.Alphabet)
                 {
@@ -90,7 +92,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Canonization
                     if (!oldToNewStateAndTransition.ContainsKey(letterNeigh))
                     {
                         var newRenamedState = new BasicNode {Id = newNodeCounter.ToString()};
-                        statesToExplore.Push(letterNeigh);
+                        statesToExplore.Enqueue(letterNeigh);
                         oldToNewStateAndTransition.Add(letterNeigh, (newRenamedState, new List<INode>()));
                         oldToNewStateAndTransition[currentState].letterOrderedTransitions.Add(newRenamedState);
 

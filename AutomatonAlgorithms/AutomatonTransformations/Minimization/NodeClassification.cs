@@ -12,11 +12,14 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
 
         private readonly Dictionary<INode, List<int>> _transitions;
 
+        private readonly int _length;
+
         public NodeClassification(int maxLen)
         {
             _transitions = new Dictionary<INode, List<int>>();
             _classesToStates = new HashSet<INode>[maxLen];
             _statesToClasses = new Dictionary<INode, int>();
+            _length = maxLen;
         }
 
         public int GetClassOfState(INode state)
@@ -55,7 +58,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
         public IEnumerable<int> GetClasses()
         {
             var i = 0;
-            while (_classesToStates[i] != null)
+            while (i < _length && _classesToStates[i] != null)
             {
                 yield return i;
                 i += 1;

@@ -8,7 +8,7 @@ namespace AutomatonAlgorithms.DataStructures.Automatons
 {
     public class Automaton
     {
-        public string Name { get; }
+        public string Name { get; set; }
         public INode InitialState { get; }
 
         public HashSet<INode> AcceptingStates { get; }

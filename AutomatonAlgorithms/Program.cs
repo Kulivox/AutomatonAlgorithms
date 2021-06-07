@@ -66,7 +66,7 @@ namespace AutomatonAlgorithms
             // var asd = command.Invoke(args);
             // watch.Stop();
             // Console.WriteLine(watch.Elapsed.ToString("mm\\:ss\\.ff"));
-            
+            // return 0;
             return command.Invoke(args);
         }
     }

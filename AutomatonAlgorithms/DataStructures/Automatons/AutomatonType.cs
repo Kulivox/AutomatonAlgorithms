@@ -4,6 +4,6 @@
     {
         EpsilonNfa,
         Nfa,
-        Dfa,
+        Dfa
     }
 }
