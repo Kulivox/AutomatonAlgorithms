@@ -8,15 +8,6 @@ namespace AutomatonAlgorithms.DataStructures.Automatons
 {
     public class Automaton
     {
-        public string Name { get; set; }
-        public INode InitialState { get; }
-
-        public HashSet<INode> AcceptingStates { get; }
-
-        public IGraph<INode, ILabel> StatesAndTransitions { get; }
-
-        public SortedSet<ILabel> Alphabet { get; }
-
         public Automaton(INode initialState, HashSet<INode> acceptingStates, IGraph<INode, ILabel> statesAndTransitions,
             IEnumerable<ILabel> alphabet, string name)
         {
@@ -29,40 +20,47 @@ namespace AutomatonAlgorithms.DataStructures.Automatons
             foreach (var letter in alphabet) Alphabet.Add(letter);
         }
 
+        public string Name { get; set; }
+        public INode InitialState { get; }
+
+        public HashSet<INode> AcceptingStates { get; }
+
+        public IGraph<INode, ILabel> StatesAndTransitions { get; }
+
+        public SortedSet<ILabel> Alphabet { get; }
+
         private bool CountAndCheckTransitions(INode node)
         {
             var result = 0;
             var lettersUsedSoFar = new HashSet<ILabel>();
             foreach (var neigh in StatesAndTransitions.GetNeighbours(node))
+            foreach (var label in StatesAndTransitions.GetTransitionLabels(node, neigh))
             {
-                foreach (var label in StatesAndTransitions.GetTransitionLabels(node,neigh))
-                {
-                    // if we found another transition under the same label, automaton is non deterministic
-                    if (lettersUsedSoFar.Contains(label))
-                        return false;
-                    
-                    lettersUsedSoFar.Add(label);
-                    result += 1;
-                }
+                // if we found another transition under the same label, automaton is non deterministic
+                if (lettersUsedSoFar.Contains(label))
+                    return false;
+
+                lettersUsedSoFar.Add(label);
+                result += 1;
             }
+
             // if we find more (which is covered by the previous return but i will leave it as it is anyway)
             // or less transitions than the letters in alphabet, automaton is non deterministic
             return result == Alphabet.Count;
         }
+
         public AutomatonType GetAutomatonType(ILabel epsilonTransition)
         {
             if (Alphabet.Contains(epsilonTransition))
                 return AutomatonType.EpsilonNfa;
 
             foreach (var node in StatesAndTransitions.Nodes)
-            {
                 if (!CountAndCheckTransitions(node))
                     return AutomatonType.Nfa;
-            }
 
             return AutomatonType.Dfa;
         }
-        
+
         public override string ToString()
         {
             var strB = new StringBuilder(StatesAndTransitions.Nodes.Count * 20);

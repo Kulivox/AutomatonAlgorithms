@@ -12,7 +12,6 @@ namespace AutomatonAlgorithms
     {
         public static void Start(string inputPath, string configPath, int maxThreads)
         {
-            
             var configuration = new BaseConfiguration(configPath);
             var loader = new AutomatonLoader(configuration);
 

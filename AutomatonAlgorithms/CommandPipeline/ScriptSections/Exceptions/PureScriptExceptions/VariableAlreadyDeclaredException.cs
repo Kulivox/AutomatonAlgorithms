@@ -8,7 +8,6 @@
 
         public VariableAlreadyDeclaredException(string message) : base(message)
         {
-            
         }
     }
 }

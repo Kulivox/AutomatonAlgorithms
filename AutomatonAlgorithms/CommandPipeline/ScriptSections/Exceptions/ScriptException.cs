@@ -14,7 +14,6 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions
 
         protected ScriptException(string message, Exception inner) : base(message, inner)
         {
-            
         }
     }
 }

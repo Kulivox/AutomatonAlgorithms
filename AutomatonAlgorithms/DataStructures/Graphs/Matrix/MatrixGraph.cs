@@ -5,14 +5,13 @@ using AutomatonAlgorithms.DataStructures.Graphs.Matrix.MatrixTypes;
 using AutomatonAlgorithms.DataStructures.Graphs.Nodes;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions.Labels;
-using csdot;
 
 namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
 {
     public class MatrixGraph : IGraph<INode, ILabel>
 
     {
-        private  ITransitionMatrix<INode> _transitionTransitionMatrix;
+        private ITransitionMatrix<INode> _transitionTransitionMatrix;
 
         public MatrixGraph()
         {
@@ -22,7 +21,7 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
         public MatrixGraph(IEnumerable<INode> nodes)
         {
             var nodeArray = nodes as INode[] ?? nodes.ToArray();
-            
+
             _transitionTransitionMatrix = new BasicTransitionMatrix(nodeArray);
             Nodes = new HashSet<INode>(nodeArray);
         }

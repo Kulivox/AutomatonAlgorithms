@@ -8,11 +8,11 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
     {
         private readonly HashSet<INode>[] _classesToStates;
 
+        private readonly int _length;
+
         private readonly Dictionary<INode, int> _statesToClasses;
 
         private readonly Dictionary<INode, List<int>> _transitions;
-
-        private readonly int _length;
 
         public NodeClassification(int maxLen)
         {

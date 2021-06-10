@@ -11,15 +11,15 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Determinization
 {
     public class BasicAutomatonDeterminizator : IDeterminizator
     {
-        public AutomatonType IntendedType { get; } = AutomatonType.Nfa;
         public BasicAutomatonDeterminizator(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
+        public AutomatonType IntendedType { get; } = AutomatonType.Nfa;
+
         public IConfiguration Configuration { get; }
 
-        
 
         public Automaton Transform(Automaton input)
         {
@@ -31,7 +31,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Determinization
         {
             // new sink node is created. This node is used as a replacement for non existing transitions,
             // under which NFA can get stuck
-            
+
             var sink = new HashSet<INode> {new BasicNode {Id = "sink"}};
             var newStates = new HashSet<HashSet<INode>>(new NodeHashSetComparer()) {sink};
             var statesAndTransitions = new Dictionary<HashSet<INode>, Dictionary<ILabel, HashSet<INode>>>();
@@ -108,26 +108,25 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Determinization
 
             while (unexploredStates.Count > 0)
             {
-                
                 var currentState = unexploredStates.Pop();
                 newStates.Add(currentState);
 
                 // prepares new transition dict, containing data structures for transitions to other sets of states
                 PrepareDictForNewState(inputAutomaton, statesAndTransitions, currentState);
-                
+
                 // fills out this new transition dict
                 FindNewNeighbourStates(inputAutomaton, currentState, statesAndTransitions);
 
                 foreach (var (key, value) in statesAndTransitions[currentState])
-                {   
+                {
                     // if there are no transitions under the label (key), new transition to sink is created
                     if (value.Count == 0)
                     {
                         statesAndTransitions[currentState][key].Add(sink.First());
                         sinkUsed = true;
                     }
-                        
-                    
+
+
                     // if new set of states is created, we push it to the stack so it can be explored further
                     if (!newStates.Contains(value)) unexploredStates.Push(value);
                 }
@@ -139,27 +138,19 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Determinization
                 statesAndTransitions.Remove(sink);
                 newStates.Remove(sink);
             }
-            
         }
 
-        
+
         private static void FindNewNeighbourStates(Automaton inputAutomaton, HashSet<INode> currentState,
             Dictionary<HashSet<INode>, Dictionary<ILabel, HashSet<INode>>> statesAndTransitions)
         {
             // this foreach goes through every state in current set of states
             foreach (var subState in currentState)
-            {
                 // then goes through every neighbour of current sub state
-                foreach (var neighbour in inputAutomaton.StatesAndTransitions.GetNeighbours(subState))
-                {
-                    // and creates transitions and adds these nodes to neighbour sets of states
-                    CreateNeighbourStatesAndHowToGetToThem(inputAutomaton, currentState, statesAndTransitions, subState,
-                        neighbour);
-                }
-                    
-            }
-                
-            
+            foreach (var neighbour in inputAutomaton.StatesAndTransitions.GetNeighbours(subState))
+                // and creates transitions and adds these nodes to neighbour sets of states
+                CreateNeighbourStatesAndHowToGetToThem(inputAutomaton, currentState, statesAndTransitions, subState,
+                    neighbour);
         }
 
         private static void CreateNeighbourStatesAndHowToGetToThem(Automaton inputAutomaton,

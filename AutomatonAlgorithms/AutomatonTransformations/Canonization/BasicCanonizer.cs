@@ -10,8 +10,6 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Canonization
 {
     public class BasicCanonizer : ICanonizer
     {
-        public AutomatonType IntendedType { get; } = AutomatonType.Dfa;
-
         private const int SequenceStart = 1;
 
         public BasicCanonizer(IConfiguration configuration)
@@ -19,9 +17,11 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Canonization
             Configuration = configuration;
         }
 
+        public AutomatonType IntendedType { get; } = AutomatonType.Dfa;
+
         public IConfiguration Configuration { get; }
 
-        
+
         public Automaton Transform(Automaton input)
         {
             return CanonizeAutomaton(input);
@@ -40,21 +40,20 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Canonization
         private Automaton CreateNewAutomaton(Automaton inputAutomaton,
             Dictionary<INode, (INode node, List<INode> letterOrderedTransitions)> oldToNewStateAndTransition)
         {
-            
             // new graph is created from canonized nodes
             var newGraph = GraphGenerator.GenerateGraph(Configuration.GraphType,
                 oldToNewStateAndTransition.Values.Select(val => val.node));
 
             // transitions to neighbours are added
             foreach (var (node, neighbours) in oldToNewStateAndTransition.Values)
-                foreach (var (neighbour, label) in neighbours.Zip(inputAutomaton.Alphabet))
-                    newGraph.AddTransition(node, neighbour, label);
+            foreach (var (neighbour, label) in neighbours.Zip(inputAutomaton.Alphabet))
+                newGraph.AddTransition(node, neighbour, label);
 
             // new initial state is just renamed old initial state
             var newInitialState = oldToNewStateAndTransition[inputAutomaton.InitialState].node;
             var newAcceptingStates =
                 inputAutomaton.AcceptingStates.Select(state => oldToNewStateAndTransition[state].node).ToHashSet();
-            
+
             var newAutomaton = new Automaton(newInitialState, newAcceptingStates, newGraph, inputAutomaton.Alphabet,
                 inputAutomaton.Name);
             return newAutomaton;

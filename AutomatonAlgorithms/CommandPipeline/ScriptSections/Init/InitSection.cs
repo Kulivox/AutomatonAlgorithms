@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptExceptions;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
@@ -49,8 +48,9 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Init
                     switch (match.Groups[1].ToString())
                     {
                         case "A":
-                        
-                            var automaton = _loader.TryLoadAutomaton(match.Groups[3].ToString(), match.Groups[2].ToString());
+
+                            var automaton = _loader.TryLoadAutomaton(match.Groups[3].ToString(),
+                                match.Groups[2].ToString());
                             autVarDict.Add(match.Groups[2].ToString(), automaton);
                             break;
                         case "T":
@@ -60,7 +60,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Init
                             throw new PipelineInitException($"Unknown variable type for {line}");
                     }
                 }
-                catch (Exception e) when(e is AutomatonFileFormatException or FileNotFoundException)
+                catch (Exception e) when (e is AutomatonFileFormatException or FileNotFoundException)
                 {
                     throw new PipelineInitException(e.Message);
                 }

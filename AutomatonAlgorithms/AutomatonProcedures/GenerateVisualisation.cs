@@ -33,7 +33,7 @@ namespace AutomatonAlgorithms.AutomatonProcedures
 
             sb.Append(";\nnode [shape = point ]; qi");
             sb.Append($";\nnode [shape = circle];\nqi -> {automaton.InitialState.Id}\n");
-            
+
 
             foreach (var state in automaton.StatesAndTransitions.Nodes)
             foreach (var neighbour in automaton.StatesAndTransitions.GetNeighbours(state))
@@ -41,7 +41,6 @@ namespace AutomatonAlgorithms.AutomatonProcedures
                 var labels = automaton.StatesAndTransitions.GetTransitionLabels(state, neighbour);
                 sb.Append($"\"{state.Id}\" -> \"{neighbour.Id}\" " +
                           $"[label=\"{labels.Aggregate("", (s, label) => $"{s}{label.Name}, ", s => s[..^2])}\"]\n");
-                    
             }
 
             sb.Append('}');
@@ -54,7 +53,6 @@ namespace AutomatonAlgorithms.AutomatonProcedures
             var graphViz = new GraphViz();
             try
             {
-                
                 var path = Configuration.OutputFolderPath + Path.DirectorySeparatorChar + automaton.Name + "Image.png";
                 Console.WriteLine($"{path}");
                 var dotString = CreateStringForRendering(automaton);
@@ -63,9 +61,9 @@ namespace AutomatonAlgorithms.AutomatonProcedures
             }
             catch (Exception e)
             {
-                throw new ProcedureException($"Error while, generating image, please, check output folder, Exception: {e.ToString()}", e);
+                throw new ProcedureException(
+                    $"Error while, generating image, please, check output folder, Exception: {e}", e);
             }
-           
         }
     }
 }

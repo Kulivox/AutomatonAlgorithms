@@ -10,7 +10,6 @@ namespace AutomatonAlgorithms.Parsers.Exceptions
 
         public AutomatonFileFormatException(string message) : base(message)
         {
-            
         }
     }
 }

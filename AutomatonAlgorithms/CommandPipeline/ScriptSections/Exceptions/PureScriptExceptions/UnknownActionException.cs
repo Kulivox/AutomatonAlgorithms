@@ -8,7 +8,6 @@
 
         public UnknownActionException(string message) : base(message)
         {
-            
         }
     }
 }

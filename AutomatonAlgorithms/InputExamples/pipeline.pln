@@ -1,13 +1,11 @@
 ﻿init{
-    A first_last = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\first_last_equal.txt
+    A exam = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\aut-min.txt
 }
 
 transformations{
-
-    first_last -> BasicEpsilonRemover -> BasicAutomatonDeterminizator => $pls
+    exam -> BasicEpsilonRemover -> BasicAutomatonDeterminizator -> BasicAutomatonMinimizer -> BasicCanonizer => exam
 }
 
 procedures {
-    first_last -> GenerateVisualisation
-    pls -> GenerateVisualisation 
+    exam -> GenerateVisualisation
 }

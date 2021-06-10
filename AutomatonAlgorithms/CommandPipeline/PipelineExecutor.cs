@@ -16,17 +16,17 @@ namespace AutomatonAlgorithms.CommandPipeline
     {
         private const string PipelineFileRegex = @"\s*(\w+)\s*{([^{}]+)}";
 
-        
-        private IConfiguration Configuration { get; }
-        private AutomatonLoader AutLoader { get; }
-
         public PipelineExecutor(IConfiguration configuration, AutomatonLoader autLoader)
         {
             Configuration = configuration;
             AutLoader = autLoader;
         }
 
-        
+
+        private IConfiguration Configuration { get; }
+        private AutomatonLoader AutLoader { get; }
+
+
         private List<(Section section, string sectString)> LoadFile(string filePath)
         {
             if (!File.Exists(filePath))
@@ -57,26 +57,22 @@ namespace AutomatonAlgorithms.CommandPipeline
             {
                 sectionsAndStrings = LoadFile(path);
             }
-            catch (Exception e ) when (e is ScriptException)
+            catch (Exception e) when (e is ScriptException)
             {
                 Console.WriteLine(e.Message);
                 return;
             }
-            
+
             foreach (var (section, sectString) in sectionsAndStrings.OrderBy(it => it.section.Priority))
-            {
                 try
                 {
                     section.ExecuteSection(sectString, automatonVariables, textVariables);
                 }
-                catch (Exception e) when(e is ScriptException)
+                catch (Exception e) when (e is ScriptException)
                 {
                     Console.WriteLine(e.Message);
                     return;
                 }
-                
-
-            }
         }
     }
 }

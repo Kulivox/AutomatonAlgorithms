@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 using AutomatonAlgorithms.AutomatonProcedures;
-using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions;
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptExceptions;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
@@ -57,7 +56,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Procedure
 
                 if (!autVarDict.TryGetValue(from, out var automatonVariable))
                     throw new VariableNotFoundException($"ERROR: {from} not found");
-                
+
                 procedure.Process(automatonVariable);
             }
         }

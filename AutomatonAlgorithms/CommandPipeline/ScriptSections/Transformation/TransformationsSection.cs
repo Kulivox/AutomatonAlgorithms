@@ -26,7 +26,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
         {
             ExecuteTransformations(sectionString, automatonVariables);
         }
-        
+
         private void ExecuteTransformations(string input, Dictionary<string, Automaton> autVarDict)
         {
             var inputLines = Regex.Split(input, "\r\n|\r|\n");
@@ -58,13 +58,13 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
 
             var transformationDict =
                 GetOperationDictionary<IAutomatonTransformation>(uniqueTransformationNames);
-            
+
 
             foreach (var (from, transformations, to) in transformationLines)
             {
                 if (!autVarDict.TryGetValue(from, out var fromAut))
                     throw new VariableNotFoundException($"{from} not found in transformation section");
-                    
+
                 var tempAut = fromAut;
 
                 foreach (var transformationString in transformations)
@@ -72,15 +72,14 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
                     if (!transformationDict.TryGetValue(transformationString, out var transformation))
                         throw new UnknownActionException(
                             $"{transformationString} is not a name of a valid transformation");
-                   
-                    
+
+
                     var autType = tempAut.GetAutomatonType(Configuration.EpsilonTransitionLabel);
                     if (transformation.IntendedType != autType)
-                    {
-                        Console.WriteLine($"WARNING [{from} -> {to}]: {transformationString} is not intended for automatons of" +
-                                          $" {autType.ToString()} type\n" +
-                                          "The transformation might fail or not work as intended");
-                    }
+                        Console.WriteLine(
+                            $"WARNING [{@from} -> {to}]: {transformationString} is not intended for automatons of" +
+                            $" {autType.ToString()} type\n" +
+                            "The transformation might fail or not work as intended");
 
                     try
                     {
@@ -91,7 +90,6 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
                         throw new TransformationFailedException($"Transformation of [{from} -> {to}] failed\n" +
                                                                 $"Reason: {e.Message}");
                     }
-                    
                 }
 
                 // $ is used to create new variables, if it is used on the right side of the expression
@@ -107,13 +105,10 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
                 {
                     if (!autVarDict.ContainsKey(to))
                         throw new VariableNotFoundException($"Automaton variable '{to}' doesn't exist");
-                    
+
                     autVarDict[to] = tempAut;
                     tempAut.Name = to;
                 }
-                
-                
-                    
             }
         }
     }

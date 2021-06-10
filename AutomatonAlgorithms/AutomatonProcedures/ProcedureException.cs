@@ -7,17 +7,14 @@ namespace AutomatonAlgorithms.AutomatonProcedures
     {
         public ProcedureException()
         {
-            
         }
 
         public ProcedureException(string message) : base(message)
         {
-            
         }
 
         public ProcedureException(string message, Exception inner) : base(message, inner)
         {
-            
         }
     }
-} 
+}

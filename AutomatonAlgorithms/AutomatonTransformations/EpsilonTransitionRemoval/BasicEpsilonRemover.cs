@@ -28,7 +28,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.EpsilonTransitionRemoval
         {
             // old accepting states are a subset of new accepting states so we can initialise it like this
             var newAcceptingStates = new HashSet<INode>(inputAutomaton.AcceptingStates);
-            
+
             // nodes wont change, only transitions will, so we can create a new graph
             var newGraph =
                 GraphGenerator.GenerateGraph(Configuration.GraphType, inputAutomaton.StatesAndTransitions.Nodes);
@@ -40,7 +40,8 @@ namespace AutomatonAlgorithms.AutomatonTransformations.EpsilonTransitionRemoval
 
             // here lies the bulk of this algorithm, which is creating new transitions and accepting states
             foreach (var state in inputAutomaton.StatesAndTransitions.Nodes)
-                CreateNewTransitionsAndAcceptingStates(inputAutomaton, newGraph, state, newAcceptingStates, newAlphabet);
+                CreateNewTransitionsAndAcceptingStates(inputAutomaton, newGraph, state, newAcceptingStates,
+                    newAlphabet);
 
             return new Automaton(inputAutomaton.InitialState, newAcceptingStates, newGraph, newAlphabet,
                 inputAutomaton.Name);
@@ -94,11 +95,8 @@ namespace AutomatonAlgorithms.AutomatonTransformations.EpsilonTransitionRemoval
             IGraph<INode, ILabel> newGraph, ILabel letter)
         {
             foreach (var state in nextTwo)
-            {
-                foreach (var reachable in StatesReachableByEpsilonTransitions(automaton.StatesAndTransitions, state))
-                    newGraph.AddTransition(currentNode, reachable, letter);
-            }
-            
+            foreach (var reachable in StatesReachableByEpsilonTransitions(automaton.StatesAndTransitions, state))
+                newGraph.AddTransition(currentNode, reachable, letter);
         }
 
         private void CreateNewTransitionsAndAcceptingStates(Automaton automaton, IGraph<INode, ILabel> newGraph,

@@ -4,12 +4,10 @@
     {
         public ScriptFormatException()
         {
-            
         }
 
         public ScriptFormatException(string message) : base(message)
         {
-            
         }
     }
 }

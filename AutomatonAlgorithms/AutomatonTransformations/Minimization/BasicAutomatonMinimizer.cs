@@ -30,10 +30,10 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
             // first, we create initial classification of the states
             // this classification contains two classes, first class containing non - accepting states and the second accepting states
             var previousClassification = CreateInitialClassification(inputAut);
-            
+
             // then we try to classify it by applying classification rules of this algorithm 
             // https://en.wikipedia.org/wiki/DFA_minimization
-            
+
             var newClassification = PerformRoundOfClassification(inputAut, previousClassification);
 
             // we repeat this classification until the classification rounds don't change anything
@@ -59,6 +59,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
                 newStates.Add(newState);
                 classToState.Add(cls, newState);
             }
+
             // then we crate graph containing these nodes
             var newGraph = GraphGenerator.GenerateGraph(Configuration.GraphType, newStates);
 
@@ -73,14 +74,14 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
                 // we can now iterate over zipped ordered alphabet with transitions (because both alphabet and transitions
                 // are ordered on the alphabet
                 foreach (var labelAndClass in
-                    inputAut.Alphabet.Zip(transition, (label, i) => new {Label = label, Class = i}))
+                        inputAut.Alphabet.Zip(transition, (label, i) => new {Label = label, Class = i}))
                     // we add new transitions for each letter - transition pair
                     newGraph.AddTransition(
                         classToState[currentClass], classToState[labelAndClass.Class], labelAndClass.Label);
 
                 currentClass += 1;
             }
-            
+
             // this magic retrieves class containing initial state and then returns its Node form
             var initialState = classToState[newClassification.GetClassOfState(
                 newClassification.ClassesToStatesIterator()

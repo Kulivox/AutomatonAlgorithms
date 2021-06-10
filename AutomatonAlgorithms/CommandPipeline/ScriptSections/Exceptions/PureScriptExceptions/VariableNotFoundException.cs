@@ -8,7 +8,6 @@
 
         public VariableNotFoundException(string message) : base(message)
         {
-            
         }
     }
 }

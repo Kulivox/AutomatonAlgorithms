@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
 using AutomatonAlgorithms.DataStructures.Graphs;
@@ -23,7 +21,7 @@ namespace AutomatonAlgorithms.Parsers
 
         private const string RegexOfTransition = @"(\w+):(.*)>(.*)";
         private readonly IConfiguration _configuration;
-        
+
         public AutomatonLoader(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -54,9 +52,7 @@ namespace AutomatonAlgorithms.Parsers
             foreach (var item in group.Value.Split("\n")
                 .Where(item => !string.IsNullOrEmpty(item))
                 .Select(item => new BasicLabel {Name = item}))
-            {
                 result.Add(item);
-            }
             return result;
         }
 
@@ -83,14 +79,13 @@ namespace AutomatonAlgorithms.Parsers
         private bool ValidateTransition(INode from, INode to, ILabel label, HashSet<INode> nodes,
             HashSet<ILabel> alphabet)
         {
-
             if (!nodes.Contains(from))
                 return false;
 
             if (!nodes.Contains(to))
                 return false;
-            
-            
+
+
             // if the alphabet contains the label, everything is ok
             if (alphabet.Contains(label))
                 return true;
@@ -104,7 +99,6 @@ namespace AutomatonAlgorithms.Parsers
 
             // else we don't know this transition and return false
             return false;
-
         }
 
 
@@ -136,10 +130,10 @@ namespace AutomatonAlgorithms.Parsers
         {
             if (!File.Exists(path))
                 throw new AutomatonFileFormatException($"File doesn't exist: {path}");
-            
+
             if (new FileInfo(path).Length > _configuration.MaxFileSizeBytes)
                 throw new AutomatonFileFormatException($"File size too large: {path}");
-            
+
 
             var text = File.ReadAllText(path);
             text = Regex.Replace(text, @"\r\n?|\n", "\n");
