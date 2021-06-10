@@ -25,6 +25,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
         }
 
 
+
         public Automaton MinimizeAutomaton(Automaton inputAut)
         {
             // first, we create initial classification of the states

@@ -34,7 +34,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Procedure
             var uniqueProcedureNames = new HashSet<string>();
 
 
-            foreach (var line in inputLines.Where(l => !string.IsNullOrEmpty(l)))
+            foreach (var line in inputLines.Where(l => !string.IsNullOrWhiteSpace(l)))
             {
                 var lineWithoutWhitespace = Regex.Replace(line, @"\s", "");
                 var match = rx.Match(lineWithoutWhitespace);

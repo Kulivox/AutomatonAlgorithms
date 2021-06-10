@@ -35,7 +35,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
             var uniqueTransformationNames = new HashSet<string>();
             var transformationLines = new List<(string from, List<string> transNames, string to)>();
 
-            foreach (var line in inputLines.Where(l => !string.IsNullOrEmpty(l)))
+            foreach (var line in inputLines.Where(l => !string.IsNullOrWhiteSpace(l)))
             {
                 var lineWithoutWhitespace = Regex.Replace(line, @"\s", "");
                 var match = rx.Match(lineWithoutWhitespace);
