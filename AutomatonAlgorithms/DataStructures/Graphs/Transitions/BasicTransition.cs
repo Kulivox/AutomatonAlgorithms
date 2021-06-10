@@ -21,12 +21,15 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Transitions
 
         protected bool Equals(BasicTransition other)
         {
-            return Equals(From, other.From) && Equals(To, other.To) && Equals(Labels, other.Labels);
+            return From.Equals(other.From) && To.Equals(other.To) && Labels.Equals(other.Labels);
         }
 
         public bool Equals(ITransition other)
         {
-            return Equals(From, other?.From) && Equals(To, other?.To) && Equals(Labels, other?.Labels);
+            if (other is null)
+                return false;
+            
+            return From.Equals(other?.From) && To.Equals(other?.To) && Labels.SetEquals(other.Labels);
         }
 
         public override bool Equals(object obj)

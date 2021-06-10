@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 using AutomatonAlgorithms.DataStructures.Graphs;
 using AutomatonAlgorithms.DataStructures.Graphs.Nodes;
@@ -16,8 +18,8 @@ namespace AutomatonAlgorithms.DataStructures.Automatons
             StatesAndTransitions = statesAndTransitions;
             Name = name;
 
-            Alphabet = new SortedSet<ILabel>();
-            foreach (var letter in alphabet) Alphabet.Add(letter);
+            Alphabet = new List<ILabel>(alphabet.OrderBy(a => a));
+            
         }
 
         public string Name { get; set; }
@@ -27,7 +29,7 @@ namespace AutomatonAlgorithms.DataStructures.Automatons
 
         public IGraph<INode, ILabel> StatesAndTransitions { get; }
 
-        public SortedSet<ILabel> Alphabet { get; }
+        public List<ILabel> Alphabet { get; }
 
         private bool CountAndCheckTransitions(INode node)
         {

@@ -34,7 +34,7 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix.MatrixTypes
 
         public IEnumerable<ITransition> GetRow(INode x)
         {
-            return Enumerable.Range(0, _matrix.GetLength(0) - 1).Select(n => _matrix[_genericIndexToIntIndex[x.Id], n]);
+            return Enumerable.Range(0, _matrix.GetLength(0)).Select(n => _matrix[_genericIndexToIntIndex[x.Id], n]);
         }
 
         public IEnumerable<ITransition> GetCol(INode x)

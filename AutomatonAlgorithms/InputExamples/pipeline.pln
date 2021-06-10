@@ -1,15 +1,12 @@
 ﻿init{
-
     A exam = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\aut-min.txt
-}
-
-transformations{
-
-    exam -> BasicEpsilonRemover -> BasicAutomatonDeterminizator -> BasicAutomatonMinimizer -> BasicCanonizer => exam
-   
+    A comp1 = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\comparison1.txt
+    A comp2 = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\comparison2.txt
+    T pa = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\playOutFile.txt
 }
 
 procedures {
-    exam, exam -> AutomatonComparer
-    
+    comp1, comp2 -> AutomatonComparer
+    exam -> GenerateVisualisation
+    exam, pa -> PlayOutWordsOnAutomaton
 }

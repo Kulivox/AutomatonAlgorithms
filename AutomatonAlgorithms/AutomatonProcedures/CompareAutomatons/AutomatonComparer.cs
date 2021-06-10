@@ -27,6 +27,7 @@ namespace AutomatonAlgorithms.AutomatonProcedures.CompareAutomatons
                 throw new ProcedureException("AutomatonComparer: bad amount of inputs, this procedure requires two automaton variables to compare");
             
             CompareAutomatonsAndSaveResult(automata[0], automata[1]);
+            Logger.Info($"Comparison of {automata[0].Name} and {automata[1].Name} is complete");
         }
 
 
@@ -37,20 +38,33 @@ namespace AutomatonAlgorithms.AutomatonProcedures.CompareAutomatons
 
         }
 
-        private void CompareTransitions(Automaton left, Automaton right, INode leftNode, INode rightNode, List<string> differingTransitions)
+        private void CompareTransitions(Automaton left, Automaton right, INode leftNode,
+            INode rightNode, List<string> differingTransitions)
         {
-            var pls = left.StatesAndTransitions
+            var leftTransitions = left.StatesAndTransitions
                 .GetTransitionsFromNode(leftNode).ToList();
-            var zippedTransitions = left.StatesAndTransitions
-                .GetTransitionsFromNode(leftNode)
-                .Zip(right.StatesAndTransitions.GetTransitionsFromNode(rightNode));
+            var rightTransitions = right.StatesAndTransitions.GetTransitionsFromNode(rightNode).ToList();
+
+            if (leftTransitions.Count != rightTransitions.Count)
+            {
+                differingTransitions
+                    .Add($"There are different amounts of" +
+                         $" transitions between {leftNode.Id} in {left.Name}, and {rightNode.Id} in {right.Name}");
+                    return;
+            }
+            
+            var zippedTransitions = leftTransitions
+                .Zip(rightTransitions);
+
             foreach (var (lTrans, rTrans) in zippedTransitions)
             {
                 if (!lTrans.Equals(rTrans))
                 {
                     differingTransitions
-                        .Add($"{lTrans.From.Id} -- {lTrans.Labels} --> {lTrans.To.Id}" +
-                             $"  !=  {rTrans.From.Id} -- {rTrans.Labels} --> {rTrans.To.Id}\n");
+                        .Add($"{lTrans.From.Id} -- {lTrans.Labels.Aggregate("", (p, l) => p + l.Name)}" +
+                             $" --> {lTrans.To.Id}" +
+                             $"  !=  {rTrans.From.Id} -- {rTrans.Labels.Aggregate("", (p, l) => p + l.Name)}" +
+                             $" --> {rTrans.To.Id}\n");
                 }
             }
         }
@@ -61,7 +75,7 @@ namespace AutomatonAlgorithms.AutomatonProcedures.CompareAutomatons
                              $"{left.Name}-{right.Name}-comparisonResult.txt";
 
             
-            if (left.Alphabet != right.Alphabet)
+            if (left.Alphabet.Except(right.Alphabet).Any() || right.Alphabet.Except(left.Alphabet).Any())
             {
                 SaveResult(outputPath, false, "Automata differ in their alphabet");
                 return;
@@ -98,7 +112,7 @@ namespace AutomatonAlgorithms.AutomatonProcedures.CompareAutomatons
             }
             
             
-            Logger.Info($"Comparison complete, result is in: {outputPath}");
+            
             if (differingStates.Count == 0 && differingTransitions.Count == 0)
             {
                 SaveResult(outputPath, true, "Automatons are equal");
@@ -118,7 +132,7 @@ namespace AutomatonAlgorithms.AutomatonProcedures.CompareAutomatons
                 sb.Append(dt);
             }
             
-            SaveResult(outputPath, true, "Automata differ in:\n" + sb.ToString());
+            SaveResult(outputPath, false, "Automata differ in:\n" + sb.ToString());
             
         }
     }

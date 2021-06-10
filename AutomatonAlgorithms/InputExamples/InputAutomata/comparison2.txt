@@ -1,4 +1,4 @@
-﻿#states
+#states
 1
 2
 3
@@ -8,11 +8,11 @@
 #accepting
 4
 #alphabet
+b
 a
-bc
 #transitions
-1:bc>2
+1:b>2
 2:a>3
 3:a>2
-2:bc>4
+2:b>4
 4:$>2

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -152,7 +153,7 @@ namespace AutomatonAlgorithms.Parsers
             var graph = GraphGenerator.GenerateGraph(_configuration.GraphType, allStates);
             ParseAndAddTransitions(match.Groups[8], allStates, alphabet, graph);
 
-            return new Automaton(initialState, acceptingStates.ToHashSet(), graph, alphabet.ToHashSet(), name);
+            return new Automaton(initialState, acceptingStates.ToHashSet(), graph, alphabet, name);
         }
 
         public Automaton TryLoadAutomaton(string path)

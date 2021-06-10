@@ -8,7 +8,7 @@ using AutomatonAlgorithms.DataStructures.Automatons;
 using GraphVizNet;
 using NLog;
 
-namespace AutomatonAlgorithms.AutomatonProcedures
+namespace AutomatonAlgorithms.AutomatonProcedures.Visualisations
 {
     public class GenerateVisualisation : IAutomatonProcedure
     {
