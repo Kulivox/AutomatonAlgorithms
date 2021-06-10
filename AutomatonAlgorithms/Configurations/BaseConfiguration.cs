@@ -32,6 +32,9 @@ namespace AutomatonAlgorithms.Configurations
                     case "OutputFolderPath":
                         OutputFolderPath = splitLine[1];
                         break;
+                    default:
+                        Console.WriteLine($"Malformed line: {item}");
+                        break;
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace AutomatonAlgorithms
 
                 taskArray[index] = Task.Factory.StartNew(() =>
                 {
+                    Console.WriteLine($"Started executing {Path.GetFileName(filePath)}");
                     var executor = new PipelineExecutor(configuration, loader);
                     executor.LoadAndExecute(filePath);
                 });

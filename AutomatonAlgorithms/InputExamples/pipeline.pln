@@ -1,11 +1,15 @@
 ﻿init{
+
     A exam = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\aut-min.txt
 }
 
 transformations{
+
     exam -> BasicEpsilonRemover -> BasicAutomatonDeterminizator -> BasicAutomatonMinimizer -> BasicCanonizer => exam
+   
 }
 
 procedures {
     exam -> GenerateVisualisation
+    
 }

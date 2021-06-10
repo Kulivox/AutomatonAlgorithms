@@ -17,7 +17,7 @@ namespace AutomatonAlgorithms.AutomatonTransformations.Minimization
 
         public IConfiguration Configuration { get; }
 
-        public AutomatonType IntendedType { get; } = AutomatonType.Dfa;
+        public  AutomatonType IntendedType => AutomatonType.Dfa;
 
         public Automaton Transform(Automaton input)
         {
