@@ -2,11 +2,13 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
+using NLog;
 
 namespace AutomatonAlgorithms
 {
     internal static class Program
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static RootCommand PrepareCommandLineParsing()
         {
             var rootCommand = new RootCommand(
@@ -32,6 +34,22 @@ namespace AutomatonAlgorithms
             return rootCommand;
         }
 
+        private static void ConfigureLogger()
+        {
+            var config = new NLog.Config.LoggingConfiguration();
+            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "logfile.log" };
+            var logConsole = new NLog.Targets.ConsoleTarget
+            {
+                Name = "logconsole",
+                Layout = "${longdate} | ${level:uppercase=true} | ${message}"
+            };
+            
+            config.AddRule(LogLevel.Info, LogLevel.Fatal, logConsole);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+            
+            LogManager.Configuration = config;
+        }
+
         private static int Main(string[] args)
         {
             var command = PrepareCommandLineParsing();
@@ -40,19 +58,19 @@ namespace AutomatonAlgorithms
                 {
                     if (!File.Exists(config))
                     {
-                        Console.WriteLine("Path to config doesn't lead to existing file");
+                        Logger.Error("Path to config doesn't lead to existing file");
                         return;
                     }
 
                     if (!Directory.Exists(input))
                     {
-                        Console.WriteLine("Path to input scripts doesn't lead to valid directory");
+                        Logger.Error("Path to input scripts doesn't lead to valid directory");
                         return;
                     }
 
                     if (threads is < 1 or > 30)
                     {
-                        Console.WriteLine("Incorrect number of threads");
+                        Logger.Error("Incorrect number of threads");
                         return;
                     }
 
@@ -60,6 +78,9 @@ namespace AutomatonAlgorithms
                     ScriptExecution.Start(input, config, threads);
                 }
             );
+            
+            
+            ConfigureLogger();
             // var watch = new Stopwatch();
             // watch.Start();
             // var asd = command.Invoke(args);

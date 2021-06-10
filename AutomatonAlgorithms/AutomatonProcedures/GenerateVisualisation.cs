@@ -5,11 +5,13 @@ using System.Text;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
 using GraphVizNet;
+using NLog;
 
 namespace AutomatonAlgorithms.AutomatonProcedures
 {
     public class GenerateVisualisation : IAutomatonProcedure
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public GenerateVisualisation(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -54,9 +56,9 @@ namespace AutomatonAlgorithms.AutomatonProcedures
             try
             {
                 var path = Configuration.OutputFolderPath + Path.DirectorySeparatorChar + automaton.Name + "Image.png";
-                Console.WriteLine($"{path}");
-                var dotString = CreateStringForRendering(automaton);
 
+                Logger.Info($"Output image created: {path}");
+                var dotString = CreateStringForRendering(automaton);
                 graphViz.LayoutAndRenderDotGraph(dotString, path, "png");
             }
             catch (Exception e)

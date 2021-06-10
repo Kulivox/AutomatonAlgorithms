@@ -2,12 +2,14 @@
 using System.IO;
 using AutomatonAlgorithms.DataStructures.Graphs;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions.Labels;
+using NLog;
 
 namespace AutomatonAlgorithms.Configurations
 {
     public class BaseConfiguration : IConfiguration
-
+    
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public BaseConfiguration()
         {
             EpsilonTransitionLabel = new BasicLabel {Name = "$"};
@@ -33,7 +35,7 @@ namespace AutomatonAlgorithms.Configurations
                         OutputFolderPath = splitLine[1];
                         break;
                     default:
-                        Console.WriteLine($"Malformed line: {item}");
+                        Logger.Warn($"Malformed line in {Path.GetFileName(path)}: {item}");
                         break;
                 }
             }

@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 using AutomatonAlgorithms.CommandPipeline;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.Parsers;
+using NLog;
 
 namespace AutomatonAlgorithms
 {
     public static class ScriptExecution
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public static void Start(string inputPath, string configPath, int maxThreads)
         {
             var configuration = new BaseConfiguration(configPath);
@@ -24,15 +26,24 @@ namespace AutomatonAlgorithms
             {
                 if (freeTaskArrayIndices.Count == 0)
                 {
-                    var newFreeTaskIndex = Task.WaitAny(taskArray.Where(t => t != null).ToArray());
-                    freeTaskArrayIndices.Add(newFreeTaskIndex);
+                    try
+                    {
+                        var newFreeTaskIndex = Task.WaitAny(taskArray.Where(t => t != null).ToArray());
+                        freeTaskArrayIndices.Add(newFreeTaskIndex);
+                    }
+                    catch (AggregateException e)
+                    {
+                        Logger.Fatal(e);
+                        return;
+                    }
+                    
                 }
 
                 var index = freeTaskArrayIndices.First();
 
                 taskArray[index] = Task.Factory.StartNew(() =>
                 {
-                    Console.WriteLine($"Started executing {Path.GetFileName(filePath)}");
+                    Logger.Info($"Started executing {Path.GetFileName(filePath)}");
                     var executor = new PipelineExecutor(configuration, loader);
                     executor.LoadAndExecute(filePath);
                 });
@@ -40,7 +51,15 @@ namespace AutomatonAlgorithms
                 freeTaskArrayIndices.Remove(index);
             }
 
-            Task.WaitAll(taskArray.Where(t => t != null).ToArray());
+            try
+            {
+                Task.WaitAll(taskArray.Where(t => t != null).ToArray());
+            }
+            catch (AggregateException e)
+            {
+                Logger.Fatal(e);
+            }
+            
         }
     }
 }

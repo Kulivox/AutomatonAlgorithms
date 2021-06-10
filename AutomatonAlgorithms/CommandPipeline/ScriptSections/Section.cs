@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
+using NLog;
 
 namespace AutomatonAlgorithms.CommandPipeline.ScriptSections
 {
@@ -12,6 +13,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections
         {
             Configuration = configuration;
         }
+
 
         public abstract int Priority { get; }
 

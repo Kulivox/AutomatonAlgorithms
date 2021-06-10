@@ -7,13 +7,14 @@ using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.FailedOperat
 using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptExceptions;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
+using NLog;
 
 namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
 {
     public class TransformationsSection : Section
     {
         private const string TransformationsLineRegex = @"^(\w+)((->\w+)+)=>(\$?\w+)$";
-
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public TransformationsSection(IConfiguration configuration) : base(configuration)
         {
         }
@@ -76,7 +77,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Transformation
 
                     var autType = tempAut.GetAutomatonType(Configuration.EpsilonTransitionLabel);
                     if (transformation.IntendedType != autType)
-                        Console.WriteLine(
+                        Logger.Warn(
                             $"WARNING [{@from} -> {to}]: {transformationString} is not intended for automatons of" +
                             $" {autType.ToString()} type\n" +
                             "The transformation might fail or not work as intended");

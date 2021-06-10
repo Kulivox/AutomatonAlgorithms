@@ -9,13 +9,16 @@ using AutomatonAlgorithms.CommandPipeline.ScriptSections.Exceptions.PureScriptEx
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
 using AutomatonAlgorithms.Parsers;
+using NLog;
 
 namespace AutomatonAlgorithms.CommandPipeline
 {
     public class PipelineExecutor
     {
         private const string PipelineFileRegex = @"\s*(\w+)\s*{([^{}]+)}";
-
+            
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        
         public PipelineExecutor(IConfiguration configuration, AutomatonLoader autLoader)
         {
             Configuration = configuration;
@@ -59,7 +62,7 @@ namespace AutomatonAlgorithms.CommandPipeline
             }
             catch (Exception e) when (e is ScriptException)
             {
-                Console.WriteLine(e.Message);
+                Logger.Error(e, $"{Path.GetFileName(path)}: {e.Message}");
                 return;
             }
 
@@ -70,9 +73,10 @@ namespace AutomatonAlgorithms.CommandPipeline
                 }
                 catch (Exception e) when (e is ScriptException)
                 {
-                    Console.WriteLine(e.Message);
+                    Logger.Error(e, $"{Path.GetFileName(path)}: {e.Message}");
                     return;
                 }
+            
         }
     }
 }
