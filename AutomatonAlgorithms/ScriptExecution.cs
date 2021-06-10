@@ -19,7 +19,7 @@ namespace AutomatonAlgorithms
             var loader = new AutomatonLoader(configuration);
 
             var taskArray = new Task[maxThreads];
-            var freeTaskArrayIndices = new HashSet<int>(Enumerable.Range(0, maxThreads));
+            var freeTaskArrayIndices = new Queue<int>(Enumerable.Range(0, maxThreads));
 
 
             foreach (var filePath in Directory.EnumerateFiles(inputPath, "*.pln", SearchOption.AllDirectories))
@@ -29,7 +29,7 @@ namespace AutomatonAlgorithms
                     try
                     {
                         var newFreeTaskIndex = Task.WaitAny(taskArray.Where(t => t != null).ToArray());
-                        freeTaskArrayIndices.Add(newFreeTaskIndex);
+                        freeTaskArrayIndices.Enqueue(newFreeTaskIndex);
                     }
                     catch (AggregateException e)
                     {
@@ -39,7 +39,7 @@ namespace AutomatonAlgorithms
                     
                 }
 
-                var index = freeTaskArrayIndices.First();
+                var index = freeTaskArrayIndices.Dequeue();
 
                 taskArray[index] = Task.Factory.StartNew(() =>
                 {
@@ -48,7 +48,6 @@ namespace AutomatonAlgorithms
                     executor.LoadAndExecute(filePath);
                 });
 
-                freeTaskArrayIndices.Remove(index);
             }
 
             try

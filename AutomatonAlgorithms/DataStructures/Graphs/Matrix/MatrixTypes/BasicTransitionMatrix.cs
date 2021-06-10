@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutomatonAlgorithms.DataStructures.Graphs.Nodes;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions;
 
@@ -29,6 +30,16 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix.MatrixTypes
         {
             get => _matrix[_genericIndexToIntIndex[x.Id], _genericIndexToIntIndex[y.Id]];
             set => _matrix[_genericIndexToIntIndex[x.Id], _genericIndexToIntIndex[y.Id]] = value;
+        }
+
+        public IEnumerable<ITransition> GetRow(INode x)
+        {
+            return Enumerable.Range(0, _matrix.GetLength(0) - 1).Select(n => _matrix[_genericIndexToIntIndex[x.Id], n]);
+        }
+
+        public IEnumerable<ITransition> GetCol(INode x)
+        {
+            return Enumerable.Range(0, _matrix.GetLength(0)).Select(n => _matrix[n, _genericIndexToIntIndex[x.Id]]);
         }
     }
 }

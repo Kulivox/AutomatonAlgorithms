@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using AutomatonAlgorithms.DataStructures.Graphs.Nodes;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions.Labels;
 
 namespace AutomatonAlgorithms.DataStructures.Graphs.Transitions
 {
-    public interface ITransition
+    public interface ITransition : IEquatable<ITransition>
     {
         public INode From { get; }
 

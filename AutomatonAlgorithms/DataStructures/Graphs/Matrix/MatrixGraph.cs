@@ -29,6 +29,7 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
         public HashSet<INode> Nodes { get; }
 
         // very expensive, matrix graph should not be created by using this method
+        // BUT, it could be implemented by resizing the graph matrix by larger number than required -> amortized time
         public void AddNode(INode node)
         {
             Nodes.Add(node);
@@ -38,6 +39,11 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Matrix
         public IEnumerable<INode> GetNeighbours(INode node)
         {
             return Nodes.Where(n => _transitionTransitionMatrix[node, n] != null);
+        }
+
+        public IEnumerable<ITransition> GetTransitionsFromNode(INode node)
+        {
+            return _transitionTransitionMatrix.GetRow(node).Where(n => n != null);
         }
 
         public HashSet<ILabel> GetTransitionLabels(INode left, INode right)

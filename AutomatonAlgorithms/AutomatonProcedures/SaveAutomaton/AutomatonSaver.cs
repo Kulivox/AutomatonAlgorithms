@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using AutomatonAlgorithms.Configurations;
@@ -17,11 +18,14 @@ namespace AutomatonAlgorithms.AutomatonProcedures.SaveAutomaton
         }
 
         public IConfiguration Configuration { get; }
-
-        public void Process(Automaton a)
+        public void Process(List<Automaton> automata, List<string> strings)
         {
-            SaveAutomaton(a);
+            if (automata.Count != 1 || strings.Count != 0)
+                throw new ProcedureException("AutomatonSaver: bad amount of inputs, this procedure requires single input of automaton type");
+
+            SaveAutomaton(automata[0]);
         }
+
 
         public void SaveAutomaton(Automaton a)
         {
@@ -37,7 +41,7 @@ namespace AutomatonAlgorithms.AutomatonProcedures.SaveAutomaton
                     Logger.Info($"Automaton saved to: {outputPath}");
                     return;
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                     Thread.Sleep(50);
                 }

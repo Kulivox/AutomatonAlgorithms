@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using AutomatonAlgorithms.DataStructures.Graphs.Transitions;
 using AutomatonAlgorithms.DataStructures.Graphs.Transitions.Labels;
 
 namespace AutomatonAlgorithms.DataStructures.Graphs
@@ -11,6 +12,8 @@ namespace AutomatonAlgorithms.DataStructures.Graphs
         public void AddNode(TNode node);
 
         public IEnumerable<TNode> GetNeighbours(TNode node);
+
+        public IEnumerable<ITransition> GetTransitionsFromNode(TNode node);
 
         public HashSet<ILabel> GetTransitionLabels(TNode left, TNode right);
 

@@ -52,6 +52,7 @@ namespace AutomatonAlgorithms
 
         private static int Main(string[] args)
         {
+            ConfigureLogger();
             var command = PrepareCommandLineParsing();
 
             command.Handler = CommandHandler.Create<string, string, int>((input, config, threads) =>
@@ -80,13 +81,7 @@ namespace AutomatonAlgorithms
             );
             
             
-            ConfigureLogger();
-            // var watch = new Stopwatch();
-            // watch.Start();
-            // var asd = command.Invoke(args);
-            // watch.Stop();
-            // Console.WriteLine(watch.Elapsed.ToString("mm\\:ss\\.ff"));
-            // return 0;
+            
             return command.Invoke(args);
         }
     }

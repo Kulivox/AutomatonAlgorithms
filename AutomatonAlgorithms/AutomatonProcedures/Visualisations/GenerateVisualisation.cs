@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,11 +19,16 @@ namespace AutomatonAlgorithms.AutomatonProcedures
         }
 
         public IConfiguration Configuration { get; }
-
-        public void Process(Automaton a)
+        public void Process(List<Automaton> automata, List<string> strings)
         {
-            GenerateImage(a);
+            if (automata.Count != 1 || strings.Count != 0)
+                throw new ProcedureException("AutomatonSaver: bad amount of inputs, this procedure requires single input of automaton type");
+            
+            GenerateImage(automata[0]);
         }
+
+        
+        
 
         private string CreateStringForRendering(Automaton automaton)
         {

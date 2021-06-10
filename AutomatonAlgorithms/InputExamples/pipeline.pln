@@ -10,6 +10,6 @@ transformations{
 }
 
 procedures {
-    exam -> GenerateVisualisation
+    exam, exam -> AutomatonComparer
     
 }

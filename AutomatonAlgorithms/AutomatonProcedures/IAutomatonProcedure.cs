@@ -1,4 +1,5 @@
-﻿using AutomatonAlgorithms.Configurations;
+﻿using System.Collections.Generic;
+using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
 
 namespace AutomatonAlgorithms.AutomatonProcedures
@@ -8,6 +9,9 @@ namespace AutomatonAlgorithms.AutomatonProcedures
         
         public IConfiguration Configuration { get; }
 
-        public void Process(Automaton a);
+        public void Process(List<Automaton> automata, List<string> strings);
+        
+        
+        
     }
 }
