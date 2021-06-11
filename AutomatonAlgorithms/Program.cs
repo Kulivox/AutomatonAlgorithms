@@ -3,12 +3,15 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
 using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace AutomatonAlgorithms
 {
     internal static class Program
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private static RootCommand PrepareCommandLineParsing()
         {
             var rootCommand = new RootCommand(
@@ -36,17 +39,17 @@ namespace AutomatonAlgorithms
 
         private static void ConfigureLogger()
         {
-            var config = new NLog.Config.LoggingConfiguration();
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "logfile.log" };
-            var logConsole = new NLog.Targets.ConsoleTarget
+            var config = new LoggingConfiguration();
+            var logfile = new FileTarget("logfile") {FileName = "logfile.log"};
+            var logConsole = new ConsoleTarget
             {
                 Name = "logconsole",
                 Layout = "${longdate} | ${level:uppercase=true} | ${message}"
             };
-            
+
             config.AddRule(LogLevel.Info, LogLevel.Fatal, logConsole);
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
-            
+
             LogManager.Configuration = config;
         }
 
@@ -79,12 +82,12 @@ namespace AutomatonAlgorithms
                     ScriptExecution.Start(input, config, threads);
                 }
             );
-            
-            
+
+
             var result = command.Invoke(args);
             Console.WriteLine("Please, press any key to close the app...");
             Console.ReadKey();
-            
+
             return result;
         }
     }

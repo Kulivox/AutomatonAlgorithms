@@ -13,22 +13,23 @@ namespace AutomatonAlgorithms.AutomatonProcedures.Visualisations
     public class GenerateVisualisation : IAutomatonProcedure
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public GenerateVisualisation(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
+
         public void Process(List<Automaton> automata, List<string> strings)
         {
             if (automata.Count != 1 || strings.Count != 0)
-                throw new ProcedureException("AutomatonSaver: bad amount of inputs, this procedure requires single input of automaton type");
-            
+                throw new ProcedureException(
+                    "AutomatonSaver: bad amount of inputs, this procedure requires single input of automaton type");
+
             GenerateImage(automata[0]);
         }
 
-        
-        
 
         private string CreateStringForRendering(Automaton automaton)
         {

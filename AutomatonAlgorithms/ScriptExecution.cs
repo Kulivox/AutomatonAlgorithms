@@ -13,6 +13,7 @@ namespace AutomatonAlgorithms
     public static class ScriptExecution
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public static void Start(string inputPath, string configPath, int maxThreads)
         {
             var configuration = new BaseConfiguration(configPath);
@@ -25,7 +26,6 @@ namespace AutomatonAlgorithms
             foreach (var filePath in Directory.EnumerateFiles(inputPath, "*.pln", SearchOption.AllDirectories))
             {
                 if (freeTaskArrayIndices.Count == 0)
-                {
                     try
                     {
                         var newFreeTaskIndex = Task.WaitAny(taskArray.Where(t => t != null).ToArray());
@@ -36,8 +36,6 @@ namespace AutomatonAlgorithms
                         Logger.Fatal(e);
                         return;
                     }
-                    
-                }
 
                 var index = freeTaskArrayIndices.Dequeue();
 
@@ -47,7 +45,6 @@ namespace AutomatonAlgorithms
                     var executor = new PipelineExecutor(configuration, loader);
                     executor.LoadAndExecute(filePath);
                 });
-
             }
 
             try
@@ -58,7 +55,6 @@ namespace AutomatonAlgorithms
             {
                 Logger.Fatal(e);
             }
-            
         }
     }
 }

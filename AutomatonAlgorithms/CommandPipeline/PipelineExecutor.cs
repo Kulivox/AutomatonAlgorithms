@@ -16,9 +16,9 @@ namespace AutomatonAlgorithms.CommandPipeline
     public class PipelineExecutor
     {
         private const string PipelineFileRegex = @"\s*(\w+)\s*{([^{}]+)}";
-            
+
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        
+
         public PipelineExecutor(IConfiguration configuration, AutomatonLoader autLoader)
         {
             Configuration = configuration;
@@ -76,7 +76,6 @@ namespace AutomatonAlgorithms.CommandPipeline
                     Logger.Error(e, $"{Path.GetFileName(path)}: {e.Message}");
                     return;
                 }
-            
         }
     }
 }

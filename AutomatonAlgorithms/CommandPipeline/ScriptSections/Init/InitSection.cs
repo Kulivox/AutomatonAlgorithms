@@ -48,7 +48,6 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Init
                     switch (match.Groups[1].ToString())
                     {
                         case "A":
-
                             var automaton = _loader.TryLoadAutomaton(match.Groups[3].ToString(),
                                 match.Groups[2].ToString());
                             autVarDict.Add(match.Groups[2].ToString(), automaton);
@@ -57,7 +56,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Init
                             textVarDict.Add(match.Groups[2].ToString(), File.ReadAllText(match.Groups[3].ToString()));
                             break;
                         default:
-                            throw new PipelineInitException($"Unknown variable type for {line}");
+                            throw new PipelineInitException($"Unknown variable type at: {line}");
                     }
                 }
                 catch (Exception e) when (e is AutomatonFileFormatException or FileNotFoundException)

@@ -19,25 +19,25 @@ namespace AutomatonAlgorithms.DataStructures.Graphs.Transitions
 
         public HashSet<ILabel> Labels { get; set; }
 
-        protected bool Equals(BasicTransition other)
-        {
-            return From.Equals(other.From) && To.Equals(other.To) && Labels.Equals(other.Labels);
-        }
-
         public bool Equals(ITransition other)
         {
             if (other is null)
                 return false;
-            
+
             return From.Equals(other?.From) && To.Equals(other?.To) && Labels.SetEquals(other.Labels);
+        }
+
+        protected bool Equals(BasicTransition other)
+        {
+            return From.Equals(other.From) && To.Equals(other.To) && Labels.Equals(other.Labels);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            
-            return obj.GetType() == this.GetType() && Equals((BasicTransition) obj);
+
+            return obj.GetType() == GetType() && Equals((BasicTransition) obj);
         }
 
         public override int GetHashCode()

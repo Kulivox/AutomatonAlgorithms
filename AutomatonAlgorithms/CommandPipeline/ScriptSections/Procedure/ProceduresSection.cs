@@ -18,7 +18,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Procedure
 
         public override int Priority { get; } = 10;
 
-         
+
         public override void ExecuteSection(string sectionString, Dictionary<string, Automaton> automatonVariables,
             Dictionary<string, string> stringVariables)
         {
@@ -65,13 +65,14 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Procedure
         // I kind of dug my own grave here :(
         // Ideal thing to do would be to re-do the whole parser, but I don't think I have enough time, and most importantly,
         // skill (I think I would have to learn how to write real parsers and tokenizers..)
-        private (List<Automaton>, List<string>) ParseOutVariables(string from, Dictionary<string, Automaton> automatonVariables,
+        private (List<Automaton>, List<string>) ParseOutVariables(string from,
+            Dictionary<string, Automaton> automatonVariables,
             Dictionary<string, string> stringVariables)
         {
             var inputs = from.Split(",");
             var automataList = new List<Automaton>();
             var stringsList = new List<string>();
-            
+
             foreach (var input in inputs)
             {
                 if (automatonVariables.ContainsKey(input))

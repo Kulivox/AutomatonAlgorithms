@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using AutomatonAlgorithms.DataStructures.Graphs;
@@ -19,7 +18,6 @@ namespace AutomatonAlgorithms.DataStructures.Automatons
             Name = name;
 
             Alphabet = new List<ILabel>(alphabet.OrderBy(a => a));
-            
         }
 
         public string Name { get; set; }

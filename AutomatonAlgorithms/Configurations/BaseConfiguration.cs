@@ -7,9 +7,10 @@ using NLog;
 namespace AutomatonAlgorithms.Configurations
 {
     public class BaseConfiguration : IConfiguration
-    
+
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public BaseConfiguration()
         {
             EpsilonTransitionLabel = new BasicLabel {Name = "$"};
