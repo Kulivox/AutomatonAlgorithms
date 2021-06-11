@@ -7,7 +7,6 @@ using AutomatonAlgorithms.AutomatonTransformations.EpsilonTransitionRemoval;
 using AutomatonAlgorithms.Configurations;
 using AutomatonAlgorithms.DataStructures.Automatons;
 using AutomatonAlgorithms.DataStructures.Graphs.Nodes;
-using Microsoft.Toolkit.HighPerformance;
 using NLog;
 
 
@@ -33,25 +32,24 @@ namespace AutomatonAlgorithms.AutomatonProcedures.PlayOutWords
         }
         private void PlayOut (Automaton automaton, string words)
         {
-
             var sb = new StringBuilder();
-            foreach (var word in words.Tokenize('\n'))
+            foreach (var word in words.Split(new[] {"\r\n", "\n", "\r"}, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (word == "")
+                if (string.IsNullOrWhiteSpace(word))
                     continue;
-
-                var result = false;
+                
+                bool result;
                 if (!word.Contains('.'))
                 {
-                    result = PlayOutMagic(word.ToString().Select(c => c.ToString()).ToArray(), automaton);
+                    result = PlayOutWord(word.Select(c => c.ToString()).ToArray(), automaton);
                 }
                 else
                 {
-                    var wordSplit = word.ToString().Split(".");
-                    result = PlayOutMagic(wordSplit, automaton);
+                    var wordSplit = word.Split(".");
+                    result = PlayOutWord(wordSplit, automaton);
                 }
 
-                sb.Append($"Word ' {word.ToString()} ' -> {result.ToString()}\n");
+                sb.Append($"Word ' {word} ' -> {result.ToString()}\n");
             }
             
             var path = Configuration.OutputFolderPath + Path.DirectorySeparatorChar + $"{automaton.Name}PlayOut.txt";
@@ -59,7 +57,7 @@ namespace AutomatonAlgorithms.AutomatonProcedures.PlayOutWords
             Logger.Info($"Result of word play out saved at: {path}");
         }
 
-        private bool PlayOutMagic(string[] word, Automaton automaton)
+        private bool PlayOutWord(string[] word, Automaton automaton)
         {
             var searchStack = new Stack<(INode state, int charIndex)>();
             searchStack.Push((automaton.InitialState, 0));
@@ -78,9 +76,14 @@ namespace AutomatonAlgorithms.AutomatonProcedures.PlayOutWords
             while (searchStack.Count != 0)
             {
                 var (currentState, charIndex) = searchStack.Pop();
-
-                if (charIndex == word.Length && automaton.AcceptingStates.Contains(currentState))
+                
+                // if we are at the end of the word and current state is accepting state, we return true
+                if (charIndex >= word.Length && automaton.AcceptingStates.Contains(currentState))
                     return true;
+                
+                //else, if we are at the end of the word and the state is not accepting, we don't process current state further and end the iteration
+                if (charIndex >= word.Length)
+                    continue;
                 
                 var transitions = automaton
                     .StatesAndTransitions
@@ -88,12 +91,6 @@ namespace AutomatonAlgorithms.AutomatonProcedures.PlayOutWords
 
                 foreach (var transition in transitions)
                 {
-
-                    if (transition.Labels.Any(l => l.Equals(Configuration.EpsilonTransitionLabel)))
-                    {
-                        searchStack.Push((transition.To, charIndex));
-                    }
-                    
                     if (transition.Labels.Any(l => l.Name == word[charIndex]))
                     {
                         searchStack.Push((transition.To, charIndex + 1));

@@ -37,7 +37,7 @@ namespace AutomatonAlgorithms.CommandPipeline.ScriptSections.Init
             var inputLines = Regex.Split(input, "\r\n|\r|\n");
             var rx = new Regex(InitLineRegex);
 
-            foreach (var line in inputLines.Where(l => !string.IsNullOrEmpty(l)))
+            foreach (var line in inputLines.Where(l => !string.IsNullOrWhiteSpace(l)))
             {
                 var match = rx.Match(line);
                 if (!match.Success)

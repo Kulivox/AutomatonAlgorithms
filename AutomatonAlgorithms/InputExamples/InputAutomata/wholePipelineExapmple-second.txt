@@ -45,7 +45,7 @@
 0
 #accepting
 1
-#alphabeta
+#alphabet
 a
 b
 #transitions

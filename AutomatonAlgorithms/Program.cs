@@ -81,8 +81,11 @@ namespace AutomatonAlgorithms
             );
             
             
+            var result = command.Invoke(args);
+            Console.WriteLine("Please, press any key to close the app...");
+            Console.ReadKey();
             
-            return command.Invoke(args);
+            return result;
         }
     }
 }
