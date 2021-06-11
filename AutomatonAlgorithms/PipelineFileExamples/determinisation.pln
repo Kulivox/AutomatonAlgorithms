@@ -1,0 +1,14 @@
+﻿init{
+    A nonDeterministic = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\SeparateExamplesOfAutomatons\determinisationExample.txt
+}
+
+transformations {
+    nonDeterministic -> BasicAutomatonDeterminizator => $deterministic
+}
+
+
+procedures {
+    deterministic -> AutomatonSaver
+    deterministic -> GenerateVisualisation
+   
+}

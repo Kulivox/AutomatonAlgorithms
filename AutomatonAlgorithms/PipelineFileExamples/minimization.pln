@@ -1,0 +1,14 @@
+﻿init{
+    A nonMinimal = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\even_and_remainder.txt
+}
+
+transformations {
+    nonMinimal -> BasicAutomatonMinimizer => $minimal
+}
+
+
+procedures {
+    minimal -> AutomatonSaver
+    minimal -> GenerateVisualisation
+   
+}

@@ -1,0 +1,18 @@
+﻿init{
+    
+    A left = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\CompletePipeline\wholePipelineExample-first.txt
+    A right = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\CompletePipeline\wholePipelineExapmple-second.txt
+    A other = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\Comparison\canonicresult.txt
+}
+
+transformations {
+    left -> BasicEpsilonRemover -> BasicAutomatonDeterminizator ->  BasicAutomatonMinimizer -> BasicCanonizer => left
+    right  -> BasicEpsilonRemover -> BasicAutomatonDeterminizator ->  BasicAutomatonMinimizer -> BasicCanonizer => right
+}
+
+
+procedures {
+    left, right -> AutomatonComparer
+    left, other -> AutomatonComparer
+  
+}

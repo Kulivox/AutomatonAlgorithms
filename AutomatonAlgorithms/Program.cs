@@ -19,7 +19,7 @@ namespace AutomatonAlgorithms
             {
                 new Option<string>(
                     new[] {"-i", "--input"},
-                    () => ".",
+                    () => "./Input",
                     "Path to .pln scripts, default is current directory"
                 ),
                 new Option<string>(

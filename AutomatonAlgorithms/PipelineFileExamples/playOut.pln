@@ -1,0 +1,10 @@
+﻿init{
+    A aut = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\PlayOutExample\playOutTest.txt
+    T words = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\PlayOutExample\playOutFile.txt
+}
+
+
+procedures {
+    aut -> GenerateVisualisation
+    aut, words -> PlayOutWordsOnAutomaton
+}

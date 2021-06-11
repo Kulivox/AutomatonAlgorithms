@@ -1,0 +1,14 @@
+﻿init{
+    A epsilon = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\SeparateExamplesOfAutomatons\first_last_equal.txt
+}
+
+transformations {
+    epsilon -> BasicEpsilonRemover => $epsilonRemoved
+}
+
+
+procedures {
+    epsilon -> GenerateVisualisation
+    epsilonRemoved -> GenerateVisualisation
+        
+}

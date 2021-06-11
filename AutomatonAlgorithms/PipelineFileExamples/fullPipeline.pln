@@ -1,0 +1,20 @@
+﻿init{
+    
+    A left = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\CompletePipeline\wholePipelineExample-first.txt
+    A right = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\CompletePipeline\wholePipelineExapmple-second.txt
+}
+
+transformations {
+    left -> BasicEpsilonRemover -> BasicAutomatonDeterminizator ->  BasicAutomatonMinimizer -> BasicCanonizer => $newLeft
+    right  -> BasicEpsilonRemover -> BasicAutomatonDeterminizator ->  BasicAutomatonMinimizer -> BasicCanonizer => $newRight
+}
+
+
+procedures {
+    
+    left -> GenerateVisualisation
+    right -> GenerateVisualisation
+    newLeft -> GenerateVisualisation
+    newRight -> GenerateVisualisation
+ 
+}

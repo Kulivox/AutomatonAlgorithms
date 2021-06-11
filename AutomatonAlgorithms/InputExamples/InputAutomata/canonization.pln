@@ -1,0 +1,15 @@
+﻿init{
+    A nonCanonic = C:\Users\Michal\RiderProjects\PV178\AutomatonAlgorithms\AutomatonAlgorithms\InputExamples\InputAutomata\SeparateExamplesOfAutomatons\nonCanonic.txt
+}
+
+transformations {
+    nonCanonic -> BasicCanonizer => $canonic
+}
+
+
+procedures {
+
+    canonic -> GenerateVisualisation
+    canonic -> AutomatonSaver
+   
+}
